@@ -1,0 +1,25 @@
+<template>
+  <div id="app">
+      <app-landing-page v-if="$route.path !== '/print'"></app-landing-page>
+    <router-view></router-view>
+  </div>
+</template>
+
+<script>
+    /* eslint-disable no-trailing-spaces,indent */
+
+    import LandingPage from './components/LandingPage'
+    export default {
+        name: 'elevue',
+        components: {
+            appLandingPage: LandingPage
+        }
+  }
+</script>
+
+<style>
+  /* CSS */
+  body{
+    overflow: scroll;
+  }
+</style>
