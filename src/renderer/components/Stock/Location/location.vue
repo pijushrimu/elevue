@@ -24,33 +24,33 @@
 </template>
 
 <script>
-    import addLocation from './AddLocation'
-    import listLocation from './ListLocation'
-    import modifyLocation from './ModifyLocation'
+import addLocation from "./AddLocation";
+import listLocation from "./ListLocation";
+import modifyLocation from "./ModifyLocation";
 
-    export default {
-        name: 'location',
-        data () {
-            return {
-                viewToken: 'Add'
-            }
-        },
-        components: {
-            addLocation,
-            listLocation,
-            modifyLocation
-        },
-        methods: {
-            changeView (view) {
-                this.viewToken = view
-            },
-            isActive (view) {
-                if (this.viewToken === view) {
-                    return true
-                }
-            }
-        }
-    }
+export default {
+  name: "location",
+  data() {
+    return {
+      viewToken: "Add",
+    };
+  },
+  components: {
+    addLocation,
+    listLocation,
+    modifyLocation,
+  },
+  methods: {
+    changeView(view) {
+      this.viewToken = view;
+    },
+    isActive(view) {
+      if (this.viewToken === view) {
+        return true;
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>

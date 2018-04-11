@@ -55,28 +55,28 @@
 </template>
 
 <script>
-    export default {
-        name: 'index',
-        data () {
-            return {
-                rows: []
-            }
-        },
-        methods: {
-            addRow () {
-                this.rows.push({
-                    locationName: 'Location 1',
-                    address: 'Garali, Jorhat',
-                    person: 'Mr x',
-                    phone: 1234567890,
-                    email: 'test@test.com'
-                })
-            }
-        },
-        created () {
-            this.addRow()
-        }
-    }
+export default {
+  name: "index",
+  data() {
+    return {
+      rows: [],
+    };
+  },
+  methods: {
+    addRow() {
+      this.rows.push({
+        locationName: "Location 1",
+        address: "Garali, Jorhat",
+        person: "Mr x",
+        phone: 1234567890,
+        email: "test@test.com",
+      });
+    },
+  },
+  created() {
+    this.addRow();
+  },
+};
 </script>
 
 <style scoped>

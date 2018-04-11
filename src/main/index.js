@@ -1,65 +1,82 @@
 /* eslint-disable no-new */
-'use strict'
+"use strict";
 
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain } from "electron";
 
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
-if (process.env.NODE_ENV !== 'development') {
-    global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
+if (process.env.NODE_ENV !== "development") {
+  global.__static = require("path")
+    .join(__dirname, "/static")
+    .replace(/\\/g, "\\\\");
 }
 
-let mainWindow
-const winURL = process.env.NODE_ENV === 'development'
+let mainWindow;
+
+const winURL =
+  process.env.NODE_ENV === "development"
     ? `http://localhost:9080`
-    : `file://${__dirname}/index.html`
+    : `file://${__dirname}/index.html`;
 
-const printURL = process.env.NODE_ENV === 'development'
+const printURL =
+  process.env.NODE_ENV === "development"
     ? `http://localhost:9080/#/print`
-    : `file://${__dirname}/index.html#print`
+    : `file://${__dirname}/index.html#print`;
 
-function createWindow () {
-    /**
-     * Initial window options
-     */
+function createWindow() {
+  /**
+   * Initial window options
+   */
 
-    mainWindow = new BrowserWindow({
-        height: 563,
-        useContentSize: true,
-        show: false,
-        minWidth: 1050
-    })
-    mainWindow.setMenu(null)
-    mainWindow.loadURL(winURL)
-    mainWindow.on('closed', () => {
-        mainWindow = null
-    })
-    mainWindow.once('ready-to-show', () => mainWindow.show())
+  mainWindow = new BrowserWindow({
+    height: 563,
+    useContentSize: true,
+    show: false,
+    minWidth: 1050,
+  });
+  mainWindow.setMenu(null);
+  mainWindow.loadURL(winURL);
+  mainWindow.on("closed", () => {
+    mainWindow = null;
+  });
+  mainWindow.once("ready-to-show", () => mainWindow.show());
+  
+
 }
 
-app.on('ready', createWindow)
+app.on("ready", createWindow);
 
-ipcMain.on('showPrint', function (e, data) {
-    let win = new BrowserWindow({ width: 1050, height: 500, webPreferences: {webSecurity: false} })
-    win.on('close', function () { win = null })
-    win.setMenu(null)
-    win.loadURL(printURL)
-    console.log(__dirname)
-})
+ipcMain.on("showPrint", (e, data)=> {
+  let win = new BrowserWindow({
+    width: 1050,
+    height: 500,
+    show: false,
+  });
+  win.openDevTools();
+  win.on("close", function() {
+    win = null;
+  });
+  win.loadURL(printURL);
+  win.show();
+  win.webContents.on('did-finish-load',function(){
+    win.webContents.send("message",data);
+  })
+  
+});
 
-app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit()
-    }
-})
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
+});
 
-app.on('activate', () => {
-    if (mainWindow === null) {
-        createWindow()
-    }
-})
+app.on("activate", () => {
+  if (mainWindow === null) {
+    createWindow();
+  }
+});
 
 /**
  * Auto Updater

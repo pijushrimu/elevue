@@ -1,27 +1,12 @@
 <template>
-    <div class="container">
+    <div class="container-fluid partyDetailDiv">
         <div class="box">
             <nav class="level">
                 <div class="level-left">
                     <div class="level-item">
                         <div>
                             <div class="subtitle">Invoice date:</div>
-                            <input class="input" type="date">
-                        </div>
-                    </div>
-                    <div class="level-item">
-                        <div>
-                            <div>
-                                <div class="subtitle">Billing Format</div>
-                                <div class="select">
-                                    <select v-model="viewToken">
-                                        <option>Select a format</option>
-                                        <option>Regular</option>
-                                        <option>Composite</option>
-                                        <option>Exempt</option>
-                                    </select>
-                                </div>
-                            </div>
+                            <input class="input" type="date"  v-model="date">
                         </div>
                     </div>
                     <div class="level-item">
@@ -29,9 +14,9 @@
                             <div>
                                 <div class="subtitle">Party A/C Name:</div>
                                 <div class="select">
-                                    <select>
-                                        <option disabled selected>Select a A/C</option>
-                                        <option v-for="account in party">{{account.name}}</option>
+                                    <select v-model="selectedParty">
+                                        <option  value="cash" selected>cash</option>
+                                        <option v-for="account in getparties" :value="account">{{account.name}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -51,115 +36,169 @@
                         <button class="button is-info" @click="$emit('addRowEvent')">Add Row</button>
                     </div>
                     <div class="level-item">
+                       <button class="button is-dark" @click="removeRow">Remove Row</button> 
+                    </div>
+                    <div class="level-item">
                         <button class="button is-dark" @click="addParty = true">Add Party</button>
+                    </div>
+                    <div class="level-item">
+                        <button class="button is-dark" @click="addItem = true">Add Item</button>
+                    </div>
+                    <div class="level-item">
+                        <button class="button is-success" @click="submitEvent">Save</button>
                     </div>
                 </div>
             </nav>
         </div>
-        <regular v-if="viewToken === 'Regular'"></regular>
-        <composite v-if="viewToken === 'Composite'"></composite>
-        <exempt v-if="viewToken === 'Exempt'"></exempt>
-        <app-add-party :update="update" :show="addParty" @toggle="addParty = $event"></app-add-party>
+        
+        <app-add-sales-list ref="addSalesList" :party="selectedParty" :data="{ date, party: selectedParty, invoice: invoiceNumber }"></app-add-sales-list>
+        <app-add-party :updateParty="updateParty" :showParty="addParty" @toggleParty="addParty = $event"></app-add-party>
+        <app-add-item :updateItem="updateItem" :showItem="addItem" @toggleItem="addItem = $event"> </app-add-item>
     </div>
 </template>
-
 <script>
-    import regular from './regular'
-    import composite from './composite'
-    import exempt from './Exempt'
-    import appAddParty from '../../../widgets/addParty'
-    import Datastore from 'nedb'
-    import { mapGetters } from 'vuex'
+import appAddSalesList from "./addSalesList";
+import appAddParty from "../../../widgets/addParty";
+import appAddItem from "../../../widgets/addItem";
 
-    export default {
-        components: {
-            regular,
-            composite,
-            exempt,
-            appAddParty
-        },
-        data () {
-            return {
-                viewToken: 0,
-                addParty: false,
-                party: [],
-                db: {},
-                invoiceNumber: 0,
-                invoice: {
-                    number: 0,
-                    prefix: '',
-                    suffix: 0,
-                    enable: false
-                }
-            }
-        },
-        methods: {
-            update (data) {
-                 this.party.push(data)
-            },
-            formatInvoiceNumber (setting) {
-                if (setting.enable) {
-                    this.invoiceNumber = setting.prefix + setting.number + setting.suffix
-                } else {
-                    this.invoiceNumber = 0
-                }
-            }
-        },
-        created () {
-            this.db.party = new Datastore({filename: 'party', autoload: true})
-            this.db.party.find({}, (err, docs) => {
-                if (err !== null) {
-                    alert('Error', 'Stock Manager')
-                    console.log(err)
-                } else {
-                    docs.forEach(d => {
-                        this.party.push(d)
-                    })
-                    console.log(docs)
-                }
-            })
-        },
-        computed: {
-            ...mapGetters([
-                'getInvoice',
-                'getInvoicePrefix',
-                'getInvoiceSuffix',
-                'getEnableInvoice',
-                'getBillFormat'
-            ])
-        },
-        watch: {
-            getBillFormat () {
-                this.viewToken = this.getBillFormat
-            },
-            getInvoice () {
-                this.invoice.number = this.getInvoice
-                this.formatInvoiceNumber(this.invoice)
-            },
-            getInvoiceSuffix () {
-                this.invoice.suffix = this.getInvoiceSuffix
-                this.formatInvoiceNumber(this.invoice)
-            },
-            getInvoicePrefix () {
-                this.invoice.prefix = this.getInvoicePrefix
-                this.formatInvoiceNumber(this.invoice)
-            },
-            getEnableInvoice () {
-                this.invoice.enable = this.getEnableInvoice
-                this.formatInvoiceNumber(this.invoice)
-            }
-        },
-        mounted () {
-            this.viewToken = this.getBillFormat
-            this.invoice.number = this.getInvoice
-            this.invoice.suffix = this.getInvoiceSuffix
-            this.invoice.prefix = this.getInvoicePrefix
-            this.invoice.enable = this.getEnableInvoice
-            this.formatInvoiceNumber(this.invoice)
-        }
+import Datastore from "nedb";
+
+import {
+  mapGetters
+} from "vuex";
+
+export default {
+  components: {
+    appAddSalesList,
+    appAddParty,
+    appAddItem,
+  },
+  data() {
+    return {
+      date: "",
+      viewToken: 0,
+      addParty: false,
+      addItem: false,
+      party: [],
+      db: {},
+      selectedParty: "cash",
+      invoiceNumber: 0,
+      invoice: {
+        number: 0,
+        prefix: "",
+        suffix: 0,
+        enable: false,
+      },
+    };
+  },
+  methods: {
+    updateParty(data) {
+      this.party.push(data);
+    },
+    updateItem(data) {
+      let child = this.$refs.addSalesList;
+      child.refresh(data);
+    },
+    formatInvoiceNumber(setting) {
+      if (setting.enable) {
+        this.invoiceNumber = setting.prefix + setting.number + setting.suffix;
+      } else {
+        this.invoiceNumber = 0;
+      }
+    },
+    submitEvent() {
+      let child = this.$refs.addSalesList;
+      child.submit();
+    },
+    checkFields() {
+      return true;
+    },
+    getToday(){
+      let today = new Date();
+      let dd = today.getDate();
+      let mm = today.getMonth() + 1;
+      let yyyy = today.getFullYear();
+      if (dd < 10) {
+        dd = '0' + dd
+      }
+      if (mm < 10) {
+        mm = '0' + mm
+      }
+
+      today = yyyy + '-' + mm + '-' + dd;
+      return today.toString();
+    },
+    removeRow(){
+        this.rows.pop();
+    },
+  },
+  created() {
+    this.date = this.getToday();
+    
+    // connect to database Groups
+     this.db.party = new Datastore({ filename: "party", autoload: true });
+    // find names in Group and push to component data
+    this.db.party.find({}, (err, docs) => {
+      if (err !== null) {
+        alert("Error");
+        console.log(err);
+      } else {
+        docs.forEach(d => {
+           this.party.push(d);
+        });
+      }
+
+    });
+  },
+  computed: {
+    ...mapGetters([
+      "getInvoice",
+      "getInvoicePrefix",
+      "getInvoiceSuffix",
+      "getEnableInvoice",
+      "getBillFormat",
+    ]),
+
+
+    getparties(){
+      return this.party;
     }
+  },
+  watch: {
+    getBillFormat() {
+      this.viewToken = this.getBillFormat;
+    },
+    getInvoice() {
+      this.invoice.number = this.getInvoice;
+      this.formatInvoiceNumber(this.invoice);
+    },
+    getInvoiceSuffix() {
+      this.invoice.suffix = this.getInvoiceSuffix;
+      this.formatInvoiceNumber(this.invoice);
+    },
+    getInvoicePrefix() {
+      this.invoice.prefix = this.getInvoicePrefix;
+      this.formatInvoiceNumber(this.invoice);
+    },
+    getEnableInvoice() {
+      this.invoice.enable = this.getEnableInvoice;
+      this.formatInvoiceNumber(this.invoice);
+    },
+  },
+  mounted() {
+    this.viewToken = this.getBillFormat;
+    this.invoice.number = this.getInvoice;
+    this.invoice.suffix = this.getInvoiceSuffix;
+    this.invoice.prefix = this.getInvoicePrefix;
+    this.invoice.enable = this.getEnableInvoice;
+    this.formatInvoiceNumber(this.invoice);
+  },
+};
+
 </script>
 
 <style scoped>
-
+.partyDetailDiv{
+  margin-top: -50px;
+}
 </style>

@@ -14,54 +14,49 @@
 
                 <!-- Right side -->
                 <div class="level-right">
+                    
                     <div class="level-item">
-                        <div class="select">
-                            <select>
-                                <option selected>All Location</option>
-                                <option v-for="location in locations">{{ location.locationName }}</option>
-                            </select>
+                        <div class="buttons">
+                            <button class="button is-" @click="printList">Export To</button>
                         </div>
-                    </div>
-                    <div class="level-item">
-                        <div class="select">
-                            <select>
-                                <option selected>All Category</option>
-                                <option v-for="category in categories">{{ category.category }}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="level-item">
                         <div class="field has-addons">
                             <p class="control">
-                                <input class="input" type="text" placeholder="Find a stock">
+                                <input class="input" v-model="search" type="text" placeholder="Find a stock">
                             </p>
-                            <p class="control">
-                                <button class="button">
-                                    Search
-                                </button>
+                            <p class="control select">
+                                
+                                    <select v-model="searchBy">
+                                        <option disabled selected>Search By</option>
+                                        <option value="0" >Stock Name</option>
+                                        <option  value="1" >Stock Group</option>
+                                        <option value="2" >Unit Name</option>
+                                    </select>
+                                
                             </p>
                         </div>
                     </div>
                 </div>
             </nav>
         </div>
+        <div id="table-scroll">
         <table class="table is-bordered is-striped is-fullwidth">
             <thead>
             <tr>
-                <th><abbr title="Serial No.">Sl. No.</abbr></th>
+                <th>Sl. No.</abbr></th>
                 <th>Stock Name</th>
-                <th>HSN Code</th>
-                <th>Opening Stock</th>
+                <th>HSN</abbr></th>
+                <th>Unit Name</abbr></th>
+                <th>Stock Groups</abbr></th>
                 <th>Tax Category</th>
+                <th>Opening Stock</th>
                 <th>Rate</th>
-                <th><abbr title="Unit Quantity Code">UQC</abbr></th>
-                <th><abbr title="Rate Of Quantity">ROQ</abbr></th>
-                <th>Location</th>
-                <th>Edit</th>
+                <th>Amount</th>
+                <!-- <th>Location</th> -->
+                <th>Selling Price</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(row,i) in rows">
+            <tr v-for="(row,i) in filterList">
                 <th>{{ i + 1 }}</th>
                 <td>
                     {{row.stockName}}
@@ -70,97 +65,137 @@
                     {{row.HSNCode}}
                 </td>
                 <td>
-                    {{row.openingStock}}
+                    {{row.unitName}}
                 </td>
                 <td>
-                    {{row.category}}
+                    {{row.stockGroup}}
+                </td>
+                <td>
+                    {{row.taxCategory}}
+                </td>
+                <td>
+                    {{row.openingStock}}
                 </td>
                 <td>
                     {{row.rate}}
                 </td>
                 <td>
-                    {{row.UQC}}
+                    {{row.amount}}
                 </td>
                 <td>
-                    {{row.rate * row.openingStock}}
+                    {{ row.defaultSP }}
                 </td>
-                <td>
-                    {{ row.location }}
-                </td>
-                <td><button class="button is-text">Edit</button></td>
+                
             </tr>
             </tbody>
         </table>
+        </div>
     </div>
 </template>
 
 <script>
-    import Datastore from 'nedb'
+import Datastore from "nedb";
 
-    export default {
-        name: 'search-stock',
-        data () {
-            return {
-                rows: [],
-                db: {},
-                categories: [],
-                locations: []
-            }
-        },
-        methods: {
-            addRow () {
-                this.rows.push({
-                    stockName: 'Parker Pen',
-                    category: 'xxx',
-                    openingStock: 999,
-                    gst: 13,
-                    rate: 30,
-                    UQC: '3',
-                    ROQ: 25,
-                    location: 'Jorhat'
-                })
-            }
-        },
-        created () {
-            // this.addRow()
-            this.db.stocks = new Datastore({ filename: 'stocks', autoload: true })
-            this.db.stocks.find({}, (err, docs) => {
-                if (err !== null) {
-                    alert('Database Error', 'Stock Manager')
-                } else {
-                    docs.forEach(d => {
-                        this.rows.push(d)
-                    })
-                }
-            })
-            this.db.categories = new Datastore({filename: 'categories', autoload: true})
-            this.db.categories.find({}, (err, docs) => {
-                if (err !== null) {
-                    alert('Error')
-                    console.log(err)
-                } else {
-                    docs.forEach(d => {
-                        this.categories.push(d)
-                    })
-                    console.log(docs)
-                }
-            })
-            this.db.location = new Datastore({ filename: 'location', autoload: true })
-            this.db.location.find({}, (err, docs) => {
-                if (err !== null) {
-                    alert('Error')
-                    console.log(err)
-                } else {
-                    docs.forEach(d => {
-                        this.locations.push(d)
-                    })
-                    console.log(docs)
-                }
-            })
+export default {
+  name: "search-stock",
+  data() {
+    return {
+      rows: [],
+      db: {},
+      categories: [],
+      locations: [],
+      search:"",
+      searchBy:"0",
+    };
+  },
+  methods: {
+    addRow() {
+      this.rows.push({
+        stockName: "",
+        HSNCode: 0,
+        unitName: "",
+        stockGroup: "",
+        taxCategory: "",
+        openingStock: 0,
+        rate: 0,
+        amount: 0,
+        defaultSP:0,
+        location: "",
+      });
+    },
+    printList:function(){
+      let data = {
+        name:"anvaya",
+        title:"Stock List",
+        table:this.rows,
+      }
+      
+      this.$electron.ipcRenderer.send("showPrint",data);
+  },
+  },
+  computed:{
+    filterList:function(){
+      return this.rows.filter((data)=>{
+        let patt = new RegExp("^"+this.search+"");
+        switch(this.searchBy){
+            case "0":
+             return data.stockName.match(patt);
+            case "1":
+            return data.stockGroup.match(patt);
+            case "2":
+            return data.unitName.match(patt);
         }
+        
+      })
     }
+  },
+  created() {
+    // this.addRow()
+    this.db.stocks = new Datastore({ filename: "stocks", autoload: true });
+    this.db.stocks.find({}, (err, docs) => {
+      if (err !== null) {
+        alert("Database Error", "Stock Manager");
+      } else {
+        docs.forEach(d => {
+          this.rows.push(d);
+        });
+      }
+    });
+    this.db.categories = new Datastore({
+      filename: "categories",
+      autoload: true,
+    });
+    this.db.categories.find({}, (err, docs) => {
+      if (err !== null) {
+        alert("Error");
+        console.log(err);
+      } else {
+        docs.forEach(d => {
+          this.categories.push(d);
+        });
+        
+      }
+    });
+    // this.db.location = new Datastore({ filename: "location", autoload: true });
+    // this.db.location.find({}, (err, docs) => {
+    //   if (err !== null) {
+    //     alert("Error");
+    //     console.log(err);
+    //   } else {
+    //     docs.forEach(d => {
+    //       this.locations.push(d);
+    //     });
+    //     console.log(docs);
+    //   }
+    // });
+  },
+};
 </script>
 
 <style scoped>
-
+#table-scroll{
+    overflow-y:auto;
+    overflow-x: hidden;
+    height:360px;
+}
 </style>

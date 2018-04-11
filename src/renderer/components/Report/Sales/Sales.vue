@@ -22,35 +22,31 @@
         <table class="table is-bordered is-striped is-fullwidth">
             <thead>
             <tr>
+                <th>Serial no.</th>
                 <th>Date</th>
                 <th>Invoice No.</th>
-                <th>Items</th>
                 <th>Party Name</th>
-                <th>Taxable Value</th>
-                <th><abbr title="Goods Sales Tax">GST</abbr></th>
                 <th>Bill Amount</th>
+                <th>Detail</th>
             </tr>
             </thead>
             <tbody>
             <tr v-for="(row,i) in rows">
                 <th>{{ i + 1 }}</th>
                 <td>
-                    {{ row.date }}
+                    {{ row.detail.date }}
                 </td>
                 <td>
-                    {{ row.invoice }}
+                    {{ row.detail.invoice }}
                 </td>
                 <td>
-                    {{ row.partyName }}
+                    {{ row.detail.party.name }}
                 </td>
                 <td>
-                    {{row.taxValue}}
+                    {{ row.detail.allTotal }}
                 </td>
                 <td>
-                    {{ row.GST }}
-                </td>
-                <td>
-                    {{ row.amount }}
+                    <button class="button is-info">View Detail</button>
                 </td>
             </tr>
             </tbody>
@@ -59,31 +55,29 @@
 </template>
 
 <script>
-    export default {
-        name: 'sales',
-        data () {
-            return {
-              rows: [
-                  {
-                      date: '1-4-2017',
-                      invoice: 'ASD20171212',
-                      partyName: 'Mr X',
-                      GST: '2500',
-                      amount: 55500,
-                      taxValue: 222
-                  },
-                  {
-                      date: '2-4-2017',
-                      invoice: 'ASD20171213',
-                      partyName: 'Mr Y',
-                      GST: '2500',
-                      amount: 55500,
-                      taxValue: 222
-                  }
-              ]
-            }
-        }
-    }
+import Datastore from "nedb";
+
+export default {
+  name: "sales",
+  data() {
+    return {
+      rows: [],
+      db: {},
+    };
+  },
+  created() {
+    this.db.sales = new Datastore({ filename: "sales", autoload: true });
+    this.db.sales.find({}, (err, docs) => {
+      if (err) {
+        alert("Database Error", "Stock Manager");
+      } else {
+        docs.forEach(d => {
+          this.rows.push(d);
+        });
+      }
+    });
+  },
+};
 </script>
 
 <style scoped>

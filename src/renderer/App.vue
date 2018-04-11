@@ -6,20 +6,21 @@
 </template>
 
 <script>
-    /* eslint-disable no-trailing-spaces,indent */
+/* eslint-disable no-trailing-spaces,indent */
+import LandingPage from "./components/LandingPage";
 
-    import LandingPage from './components/LandingPage'
-    export default {
-        name: 'elevue',
-        components: {
-            appLandingPage: LandingPage
-        }
-  }
+export default {
+  name: "elevue",
+  components: {
+    appLandingPage: LandingPage,
+  },
+};
 </script>
 
 <style>
-  /* CSS */
-  body{
-    overflow: scroll;
-  }
+/* CSS */
+html, body {
+      height: 100%;
+      overflow: hidden;
+   }
 </style>

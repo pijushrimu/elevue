@@ -1,10 +1,12 @@
 const template = [
-    {
-        label: 'Filexx'
+  {
+    label: "Filexx",
+  },
+  {
+    label: "Setting",
+    click() {
+      console.log("clicked!!");
     },
-    {
-        label: 'Setting',
-        click () { console.log('clicked!!') }
-    }
-]
-export default template
+  },
+];
+export default template;

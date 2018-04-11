@@ -56,42 +56,42 @@
 </template>
 
 <script>
-    import Datastore from 'nedb'
+import Datastore from "nedb";
 
-    export default {
-        name: 'index',
-        data () {
-            return {
-                rows: [],
-                db: {}
-            }
-        },
-        methods: {
-            addRow () {
-                this.rows.push({
-                    locationName: '',
-                    address: '',
-                    person: '',
-                    phone: '',
-                    email: ''
-                })
-            },
-            submit () {
-                if (this.rows[0].locationName !== '') {
-                    this.db.location.insert(this.rows)
-                    this.rows = []
-                    this.addRow()
-                    alert('Done!!', 'Stock Manager')
-                } else {
-                    alert('Non of the Fields can be empty!!', 'Stock Manager')
-                }
-            }
-        },
-        created () {
-            this.addRow()
-            this.db.location = new Datastore({ filename: 'location', autoload: true })
-        }
-    }
+export default {
+  name: "index",
+  data() {
+    return {
+      rows: [],
+      db: {},
+    };
+  },
+  methods: {
+    addRow() {
+      this.rows.push({
+        locationName: "",
+        address: "",
+        person: "",
+        phone: "",
+        email: "",
+      });
+    },
+    submit() {
+      if (this.rows[0].locationName !== "") {
+        this.db.location.insert(this.rows);
+        this.rows = [];
+        this.addRow();
+        alert("Done!!", "Stock Manager");
+      } else {
+        alert("Non of the Fields can be empty!!", "Stock Manager");
+      }
+    },
+  },
+  created() {
+    this.addRow();
+    this.db.location = new Datastore({ filename: "location", autoload: true });
+  },
+};
 </script>
 
 <style scoped>

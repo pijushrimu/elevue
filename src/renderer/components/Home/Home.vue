@@ -25,10 +25,10 @@
 </template>
 
 <script>
-    /* eslint-disable indent */
-    export default {
-        name: 'home'
-    }
+/* eslint-disable indent */
+export default {
+  name: "home",
+};
 </script>
 
 <style scoped>

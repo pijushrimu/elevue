@@ -13,7 +13,7 @@
                     </ul>
                 </aside>
             </div>
-            <div class="is-divider-vertical"></div>
+            <div class="is-divider-vertical" style="padding:0rem"></div>
             <div class="column is-primary">
                 <add-unit v-if="viewToken === 'Add'"></add-unit>
                 <modify-unit v-if="viewToken === 'Modify'"></modify-unit>
@@ -24,33 +24,33 @@
 </template>
 
 <script>
-    import addUnit from './AddUnits'
-    import modifyUnit from './ModifyUnits'
-    import listUnit from './List'
+import addUnit from "./AddUnits";
+import modifyUnit from "./ModifyUnits";
+import listUnit from "./List";
 
-    export default {
-        name: 'units',
-        components: {
-            addUnit,
-            modifyUnit,
-            listUnit
-        },
-        data () {
-            return {
-                viewToken: 'Add'
-            }
-        },
-        methods: {
-            changeView (view) {
-                this.viewToken = view
-            },
-            isActive (view) {
-                if (this.viewToken === view) {
-                    return true
-                }
-            }
-        }
-    }
+export default {
+  name: "units",
+  components: {
+    addUnit,
+    modifyUnit,
+    listUnit,
+  },
+  data() {
+    return {
+      viewToken: "Add",
+    };
+  },
+  methods: {
+    changeView(view) {
+      this.viewToken = view;
+    },
+    isActive(view) {
+      if (this.viewToken === view) {
+        return true;
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>

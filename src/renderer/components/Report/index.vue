@@ -22,33 +22,33 @@
 </template>
 
 <script>
-    import Sales from './Sales/Sales'
-    import Purchase from './Purchase/purchase'
-    import Stock from './Stock/stock'
+import Sales from "./Sales/Sales";
+import Purchase from "./Purchase/purchase";
+import Stock from "./Stock/stock";
 
-    export default {
-        name: 'index',
-        components: {
-            Stock,
-            Sales,
-            Purchase
-        },
-        data () {
-            return {
-                viewToken: 'Sales'
-            }
-        },
-        methods: {
-            changeView (view) {
-                this.viewToken = view
-            },
-            isActive (view) {
-                if (this.viewToken === view) {
-                    return true
-                }
-            }
-        }
-    }
+export default {
+  name: "index",
+  components: {
+    Stock,
+    Sales,
+    Purchase,
+  },
+  data() {
+    return {
+      viewToken: "Sales",
+    };
+  },
+  methods: {
+    changeView(view) {
+      this.viewToken = view;
+    },
+    isActive(view) {
+      if (this.viewToken === view) {
+        return true;
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>

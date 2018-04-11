@@ -13,7 +13,7 @@
                     </ul>
                 </aside>
             </div>
-            <div class="is-divider-vertical"></div>
+            <div class="is-divider-vertical" style="padding:0rem"></div>
             <div class="column is-primary">
                 <add-stock v-if="viewToken === 'Add'"></add-stock>
                 <modify-stock v-if="viewToken === 'Modify'"></modify-stock>
@@ -24,33 +24,33 @@
 </template>
 
 <script>
-    import addStock from './AddStock/addStock'
-    import modifyStock from './ModifyStock/modifyStock'
-    import listStock from './SearchStock/searchStock'
+import addStock from "./AddStock/addStock";
+import modifyStock from "./ModifyStock/modifyStock";
+import listStock from "./SearchStock/searchStock";
 
-    export default {
-        name: 'create-stock',
-        data () {
-            return {
-                viewToken: 'Add'
-            }
-        },
-        components: {
-            addStock,
-            modifyStock,
-            listStock
-        },
-        methods: {
-            changeView (view) {
-                this.viewToken = view
-            },
-            isActive (view) {
-                if (this.viewToken === view) {
-                    return true
-                }
-            }
-        }
-    }
+export default {
+  name: "create-stock",
+  data() {
+    return {
+      viewToken: "Add",
+    };
+  },
+  components: {
+    addStock,
+    modifyStock,
+    listStock,
+  },
+  methods: {
+    changeView(view) {
+      this.viewToken = view;
+    },
+    isActive(view) {
+      if (this.viewToken === view) {
+        return true;
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>

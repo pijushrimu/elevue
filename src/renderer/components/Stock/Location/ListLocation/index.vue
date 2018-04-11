@@ -68,32 +68,32 @@
 </template>
 
 <script>
-    import Datastore from 'nedb'
+import Datastore from "nedb";
 
-    export default {
-        name: 'index',
-        data () {
-            return {
-                rows: [],
-                db: {}
-            }
-        },
-        created () {
-            // this.addRow()
-            this.db.location = new Datastore({ filename: 'location', autoload: true })
-            this.db.location.find({}, (err, docs) => {
-                if (err !== null) {
-                    alert('Error')
-                    console.log(err)
-                } else {
-                    docs.forEach(d => {
-                        this.rows.push(d)
-                    })
-                    // console.log(docs)
-                }
-            })
-        }
-    }
+export default {
+  name: "index",
+  data() {
+    return {
+      rows: [],
+      db: {},
+    };
+  },
+  created() {
+    // this.addRow()
+    this.db.location = new Datastore({ filename: "location", autoload: true });
+    this.db.location.find({}, (err, docs) => {
+      if (err !== null) {
+        alert("Error");
+        console.log(err);
+      } else {
+        docs.forEach(d => {
+          this.rows.push(d);
+        });
+        // console.log(docs)
+      }
+    });
+  },
+};
 </script>
 
 <style scoped>

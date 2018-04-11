@@ -25,7 +25,7 @@
                         +91
                     </a>
                     <p class="control is-expanded">
-                        <input class="input" type="number" maxlength="10" placeholder="Your phone number"
+                        <input class="input" maxlength="10" placeholder="Your phone number"
                                v-model="profile.phone">
                     </p>
                 </div>
@@ -33,7 +33,7 @@
                 <div class="field">
                     <label class="label">Goods and Services Tax Identification Number (GSTIN)</label>
                     <div class="control">
-                        <input class="input" maxlength="15" placeholder="e.g. 22AAAAA0000A1Z5" v-model="profile.gstin">
+                        <input class="input" maxlength="15" placeholder="e.g. 22AAAAA0000A1Z5" v-model="profile.GSTIN">
                     </div>
                 </div>
                 <div class="field">
@@ -50,7 +50,7 @@
                             <input class="input" placeholder="e.g. Assam" v-model="profile.state">
                         </div>
                     </div>
-                    <div class="is-divider-vertical"></div>
+                    <div class="control"></div>
                     <div class="field">
                         <label class="label">District</label>
                         <div class="control">
@@ -68,51 +68,78 @@
 </template>
 
 <script>
-    /* eslint-disable space-before-function-paren */
+/* eslint-disable space-before-function-paren */
 
-    import Datastore from 'nedb'
+// import Datastore from 'nedb'
+import { mapGetters, mapActions } from "vuex";
 
-    export default {
-        name: 'profile',
-        props: {
-            'show': Boolean
-        },
-        data() {
-            return {
-                category: '',
-                db: {},
-                profile: {}
-            }
-        },
-        methods: {
-            submit() {
-                this.db.profile.remove({}, {multi: true}, (err, numRemoved) => {
-                    if (err) {
-                        console.log(err)
-                        alert('Error Try Again', 'Stock Manager')
-                    } else {
-                        this.db.profile.insert(this.profile)
-                        alert('Done!!', 'Stock Manager')
-                        this.$emit('toggle', !this.show)
-                    }
-                })
-            }
-        },
-        created() {
-            this.db.profile = new Datastore({filename: 'profile', autoload: true})
-            this.db.profile.find({}, (err, docs) => {
-                if (err !== null) {
-                    alert('Error')
-                    console.log(err)
-                } else {
-                    docs.forEach(d => {
-                        this.profile = d
-                    })
-                    console.log(docs.length)
-                }
-            })
-        }
-    }
+export default {
+  name: "profile",
+  props: {
+    show: Boolean,
+  },
+  data() {
+    return {
+      category: "",
+      db: {},
+      profile: {
+        name: "",
+        email: "",
+        phone: "",
+        GSTIN: "",
+        address: "",
+        state: "",
+        district: "",
+      },
+    };
+  },
+  methods: {
+    submit() {
+      this.setName(this.profile.name);
+      this.setEmail(this.profile.email);
+      this.setPhone(this.profile.phone);
+      this.setGSTIN(this.profile.GSTIN);
+      this.setAddress(this.profile.address);
+      this.setState(this.profile.state);
+      this.setDistrict(this.profile.district);
+      this.$emit("toggle", !this.show);
+    },
+    ...mapActions([
+      "setProfile",
+      "setName",
+      "setEmail",
+      "setPhone",
+      "setGSTIN",
+      "setAddress",
+      "setState",
+      "setDistrict",
+    ]),
+  },
+  computed: {
+    ...mapGetters([
+      "getName",
+      "getEmail",
+      "getPhone",
+      "getGSTIN",
+      "getState",
+      "getDistrict",
+      "getAddress",
+    ]),
+  },
+  watch: {
+    show() {
+      if (this.show) {
+        this.profile.name = this.getName;
+        this.profile.email = this.getEmail;
+        this.profile.phone = this.getPhone;
+        this.profile.GSTIN = this.getGSTIN;
+        this.profile.state = this.getState;
+        this.profile.district = this.getDistrict;
+        this.profile.address = this.getAddress;
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>

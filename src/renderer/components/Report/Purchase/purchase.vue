@@ -59,31 +59,31 @@
 </template>
 
 <script>
-    export default {
-        name: 'purchase',
-        data () {
-            return {
-                rows: [
-                    {
-                        date: '1-4-2017',
-                        invoice: 'XUV20151212',
-                        partyName: 'Mr X',
-                        GST: '2500',
-                        amount: 55500,
-                        taxValue: 222
-                    },
-                    {
-                        date: '2-4-2017',
-                        invoice: 'ABC20151213',
-                        partyName: 'Mr Y',
-                        GST: '2500',
-                        amount: 55500,
-                        taxValue: 222
-                    }
-                ]
-            }
-        }
-    }
+export default {
+  name: "purchase",
+  data() {
+    return {
+      rows: [
+        {
+          date: "1-4-2017",
+          invoice: "XUV20151212",
+          partyName: "Mr X",
+          GST: "2500",
+          amount: 55500,
+          taxValue: 222,
+        },
+        {
+          date: "2-4-2017",
+          invoice: "ABC20151213",
+          partyName: "Mr Y",
+          GST: "2500",
+          amount: 55500,
+          taxValue: 222,
+        },
+      ],
+    };
+  },
+};
 </script>
 
 <style scoped>

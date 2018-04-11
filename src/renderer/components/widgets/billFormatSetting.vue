@@ -27,12 +27,12 @@
 </template>
 
 <script>
-    export default {
-        name: 'bill-format-setting',
-        props: {
-            'show': Boolean
-        }
-    }
+export default {
+  name: "bill-format-setting",
+  props: {
+    show: Boolean,
+  },
+};
 </script>
 
 <style scoped>
