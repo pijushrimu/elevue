@@ -11,6 +11,7 @@
                                     <option selected disabled>All Party - All Period</option>
                                     <option>Party wise</option>
                                     <option>Period wise</option>
+                                    <option>Invoice number</option>
                                 </select>
                             </div>
                         </div>
@@ -23,46 +24,65 @@
             <thead>
             <tr>
                 <th>Serial no.</th>
-                <th>Date</th>
                 <th>Invoice No.</th>
+                <th>Invoice Date</th>
                 <th>Party Name</th>
-                <th>Bill Amount</th>
-                <th>Detail</th>
+                <th>GST NO</th>
+                <th>Total Taxable Amount</th>
+                <th>Total GST</th>
+                <th>Total Amount</th>
             </tr>
             </thead>
             <tbody>
+                <!-- "detail":{"invoice":"ANV17PR","date":"2018-04-11","party":"cash","totalAmount":128.57600000000002} -->
             <tr v-for="(row,i) in rows">
                 <th>{{ i + 1 }}</th>
-                <td>
-                    {{ row.detail.date }}
-                </td>
                 <td>
                     {{ row.detail.invoice }}
                 </td>
                 <td>
-                    {{ row.detail.party.name }}
+                    {{ row.detail.date }}
                 </td>
                 <td>
-                    {{ row.detail.allTotal }}
+                    {{ row.detail.party }}
                 </td>
                 <td>
-                    <button class="button is-info">View Detail</button>
+                    // gst no
+                </td>
+                <td>
+                    // total taxable amount
+                </td>
+                <td>
+                    // total gst
+                </td>
+                
+                <td>
+                    {{ row.detail.totalAmount }}
+                </td>
+                <td>
+                    <button class="button is-info" @click="editEntry(row._id)">Edit</button>
                 </td>
             </tr>
             </tbody>
         </table>
+        <app-modify-sale-entry :showModidyModelView=showModifyModel @toggleModityEntryView="showModifyModel = $event"></app-modify-sale-entry>
     </div>
 </template>
 
 <script>
 import Datastore from "nedb";
+import appModifySaleEntry from '../../widgets/modifySaleEntry';
 
 export default {
   name: "sales",
+  components: {
+    appModifySaleEntry,
+  },
   data() {
     return {
       rows: [],
       db: {},
+      showModifyModel:false,
     };
   },
   created() {
@@ -77,6 +97,12 @@ export default {
       }
     });
   },
+  methods:{
+      editEntry(id){
+          console.log(id);
+          this.showModifyModel = true;
+      }
+  }
 };
 </script>
 
