@@ -50,5 +50,10 @@ export default new Router({
       name: "print",
       component: require("@/components/Print").default,
     },
+    {
+      path: "/edit",
+      name: "edit",
+      component: require("@/components/EditEntry").default,
+    },
   ],
 });

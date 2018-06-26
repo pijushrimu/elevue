@@ -20,10 +20,16 @@ const winURL =
     ? `http://localhost:9080`
     : `file://${__dirname}/index.html`;
 
+const editEntryURL =
+    process.env.NODE_ENV === "development"
+      ? `http://localhost:9080/#/edit`
+      : `file://${__dirname}/index.html#edit`;
 const printURL =
   process.env.NODE_ENV === "development"
     ? `http://localhost:9080/#/print`
     : `file://${__dirname}/index.html#print`;
+
+
 
 function createWindow() {
   /**
@@ -65,6 +71,33 @@ ipcMain.on("showPrint", (e, data)=> {
   })
   
 });
+
+ipcMain.on("edit", (e,data)=> {
+  let win = new BrowserWindow({
+    width: 1050,
+    height: 500,
+    show: false,
+  });
+  win.openDevTools();
+  win.on("close", function() {
+    win = null;
+  });
+  win.loadURL(editEntryURL);
+  win.webContents.on('did-finish-load',function(){
+    win.show();
+    win.focus();
+    win.webContents.send("message",data);
+  })
+  
+  win.webContents.on('close',function(){
+    
+    mainWindow.webContents.send("reload");
+
+  })
+  
+});
+
+
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {

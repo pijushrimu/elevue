@@ -24,6 +24,10 @@ export default {
     }
   },
   props:{
+    name: {
+      type:String,
+      required:true
+    },
     items:{
        type: Array,
        required:true,
@@ -46,6 +50,7 @@ export default {
     },
   },
   created(){
+        console.log(this.name);
         
   },
    computed:{

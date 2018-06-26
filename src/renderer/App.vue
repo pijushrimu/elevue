@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-      <app-landing-page v-if="$route.path !== '/print'"></app-landing-page>
+      <app-landing-page v-if="$route.path !== '/print' && $route.path !== '/edit' "></app-landing-page>
     <router-view></router-view>
   </div>
 </template>

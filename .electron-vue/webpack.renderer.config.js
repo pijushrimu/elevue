@@ -171,7 +171,7 @@ if (process.env.NODE_ENV === 'production') {
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true,
-      use: [stylus_plugin()]
+      // use: [stylus_plugin()]
     })
   )
 }

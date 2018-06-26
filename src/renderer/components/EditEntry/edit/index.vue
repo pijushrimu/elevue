@@ -46,7 +46,7 @@
                           <button class="button is-dark" @click="addItem = true">Add Item</button>
                       </div>
                       <div class="level-item">
-                          <button class="button is-success" @click="submitEvent">Save</button>
+                          <button class="button is-success" @click="updateEvent">Save</button>
                       </div>
                   </div>
               </nav>
@@ -80,7 +80,11 @@
             <tr v-for="(row,i) in rows">
                 <th>{{ i + 1 }}</th>
                 <td>
-                    <auto-complete  ref="complete" v-if="reload"  :items="stocks" v-model="row.stockName" v-on:Selected="selected($event,i)"></auto-complete>
+                     <select class="select" v-model="row.stockName" @change="selected(row.stockName,i)">
+                          <option v-for="items in stocks" >
+                            {{ items.stockName }}
+                          </option>
+                      </select>
                 </td>
                 <td>
                     <input class="input" type="number" placeholder="HSN Code" v-model="row.HSNCode">
@@ -168,17 +172,13 @@
 <script>
 import Datastore from "nedb";
 
-import autoComplete from "../../../widgets/autoComplete";
-import appAddParty from "../../../widgets/addParty";
-import appAddItem from "../../../widgets/addItem";
-import {
-  mapGetters
-} from "vuex";
+import appAddParty from "../../widgets/addParty";
+import appAddItem from "../../widgets/addItem";
+const remote = require('electron').remote;
 
 export default {
   name: "addSalesList",
   components: {
-    autoComplete,
     appAddParty,
     appAddItem,
   },
@@ -190,7 +190,7 @@ export default {
       addItem: false,
       party: [],
       db: {},
-      selectedParty: "cash",
+      selectedParty: null,
       invoiceNumber: 0,
       gstinNumber:"",
       invoice: {
@@ -213,7 +213,8 @@ export default {
       summary_IGST: 0,
       summary_totalAmount: 0,
       localParty:true,
-      summary_partyGstNo:"",  
+      summary_partyGstNo:"",
+      _id:null,  
     };
   },
   methods: {
@@ -440,6 +441,43 @@ export default {
         alert("None of the Fields can be empty", "Stock Manager");
       }
     },
+    updateEvent(){
+      console.log(this._id)
+      // Update the invoice
+      if (this.checkFields()) {
+        const x = {
+          items: this.rows,
+          detail: {
+            invoice: this.invoiceNumber,
+            date: this.date,
+            party: this.getPartyName(),
+            gstNo:this.getPartyGstNo(),
+            totalGst:this.getTotalGst(),
+            getTotalTaxableAmount: this.getTotalTaxableAmount(),
+            totalAmount: this.getTotalSalesAmount(),
+            localParty: this.localParty,
+          },
+        };
+        console.log(x);
+        this.db.sales.update({_id:this._id},x, err => {
+          if (err) {
+            alert("Error Try Again!!", "Stock Manager");
+          } else {
+            this.rows = [];
+            this.gstSummaryRows = [];
+            this.addRow();
+            alert("Done!!", "Stock Manager");
+            
+            let window = remote.getCurrentWindow();
+            window.close();
+            
+          }
+        });
+      } else {
+        alert("None of the Fields can be empty", "Stock Manager");
+      }
+
+    },
     selected(event, i) {
       let stock = this.findStock(event)[0];
       let row = this.rows[i];
@@ -489,24 +527,32 @@ export default {
       return this.stocks.filter(data => {
         return data.stockName.match(patt);
       });
+    },
+    selected(event,i){
+      
+      let stock = this.findStock(event)[0];
+      // let row = this.rows[i];
+      // row.stockName = stock.stockName;
+      
+      this.rows[i].HSNCode =  stock.HSNCode;
+      this.rows[i].rate = stock.defaultSP;
+      this.rows[i].taxPer = stock.taxCategory;
+
+      console.log(event,i);
+      console.log(stock);
+      this.taxChanged(i);
+      this.calculateGstSummary(1);
+      
+    },
+    findParty(gstNo){
+      if(this.party.length < 1){
+       return false; 
+      }
+      return this.party.filter(part => part.gstin == gstNo)[0];
     }
   },
   created() {
     this.date = this.getToday();
-    this.db.stocks = new Datastore({ filename: "stocks", autoload: true });
-    
-
-    this.db.stocks.find({}, (err, docs) => {
-      if (err) {
-        alert("Database Error", "Stock Manager");
-      } else {
-        docs.forEach(d => {
-          this.stocks.push(d);
-          this.stockName.push(d.stockName);
-        });
-      }
-    });
-    // find names in Group and push to component data
     this.db.party = new Datastore({ filename: "party", autoload: true });
     this.db.party.find({}, (err, docs) => {
       if (err !== null) {
@@ -519,6 +565,19 @@ export default {
       }
 
     });
+    this.db.stocks = new Datastore({ filename: "stocks", autoload: true });
+    this.db.stocks.find({}, (err, docs) => {
+      if (err) {
+        alert("Database Error", "Stock Manager");
+      } else {
+        docs.forEach(d => {
+          this.stocks.push(d);
+          this.stockName.push(d.stockName);
+        });
+      }
+    });
+    // find names in Group and push to component data
+    
 
     this.addRow();
     this.$on("addRowEvent", this.addRow);
@@ -526,25 +585,6 @@ export default {
     this.db.sales = new Datastore({ filename: "sales", autoload: true });
   },
   watch: {
-    getBillFormat() {
-      this.viewToken = this.getBillFormat;
-    },
-    getInvoice() {
-      this.invoice.number = this.getInvoice;
-      this.formatInvoiceNumber(this.invoice);
-    },
-    getInvoiceSuffix() {
-      this.invoice.suffix = this.getInvoiceSuffix;
-      this.formatInvoiceNumber(this.invoice);
-    },
-    getInvoicePrefix() {
-      this.invoice.prefix = this.getInvoicePrefix;
-      this.formatInvoiceNumber(this.invoice);
-    },
-    getEnableInvoice() {
-      this.invoice.enable = this.getEnableInvoice;
-      this.formatInvoiceNumber(this.invoice);
-    },
     selectedParty:function(){
       let stateId =  this.selectedParty.gstin.substring(0,2);
       
@@ -553,24 +593,35 @@ export default {
       }else{
         this.localParty = false;
       }
-      // console.log(this.localParty);
+      console.log(this.localParty);
     }
   },
   mounted() {
-    this.viewToken = this.getBillFormat;
-    this.invoice.number = this.getInvoice;
-    this.invoice.suffix = this.getInvoiceSuffix;
-    this.invoice.prefix = this.getInvoicePrefix;
-    this.invoice.enable = this.getEnableInvoice;
-    this.formatInvoiceNumber(this.invoice);
+     
+     this.$electron.ipcRenderer.on('message', (event, data) => {
+        console.log(data);
+        this._id = data.trim();
+        this.db.sales.find({_id:data}, (err, docs) => {
+        if (err) {
+          alert("Database Error", "Sales Entry");
+        } else {
+          docs.forEach(d => {
+            
+            this.date = d.detail.date;
+            
+            this.selectedParty = this.findParty(d.detail.gstNo);
+            
+            this.invoiceNumber = d.detail.invoice;
+            this.localParty = d.detail.localParty;
+            console.log(this.selectedParty.name);
+            this.rows = d.items.slice();
+            this.calculateGstSummary(1);
+          });
+        }
+    });
+   })
   },
   computed: {
-    ...mapGetters([
-      "getInvoice",
-      "getInvoicePrefix",
-      "getInvoiceSuffix",
-      "getEnableInvoice",
-      "getBillFormat",]),
     filterList: function() {
       return this.stocks.filter(data => {
         let patt = new RegExp("^" + this.search + "");
@@ -593,6 +644,6 @@ export default {
   bottom: 10px;
 }
 .partyDetailDiv{
-  margin-top: -50px;
+  /* margin-top: -50px; */
 }
 </style>
