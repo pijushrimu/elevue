@@ -14,10 +14,18 @@
                                 </select>
                             </div>
                           <div class="select">
-                            <select @change="searchSelectChanged($event)">
-                              <option  selected >All Period</option>
-
+                            <select v-model="selectedPeriods" :disabled="count.length == 0">
+                              <option  selected value="">All Period</option>
+                              <option v-for="periods in count">{{periods.detail.date}}</option>
                             </select>
+
+                          </div>
+                          <div>
+                            <input type="text" placeholder="Start Date" v-model="period1" :disabled="selectedPeriods.length == 0">
+
+                          </div>
+                          <div class="space">
+                            <input type="text" placeholder="End Date" v-model="period2" :disabled="period1.length==0">
 
                           </div>
                         </div>
@@ -91,6 +99,10 @@ export default {
       searchSelectType:0,
       party: [],
       selectedParty: "",
+      selectedPeriods:"",
+      count:[],
+      period1:"",
+      period2:"",
     };
   },
   created() {
@@ -102,8 +114,9 @@ export default {
         docs.forEach(d => {
           this.rows.push(d);
         });
+        console.log('sales',this.rows);
       }
-    });
+    })
     this.db.party = new Datastore({ filename: "party", autoload: true });
     this.db.party.find({}, (err, docs) => {
       if (err !== null) {
@@ -114,7 +127,7 @@ export default {
            this.party.push(d);
         });
       }
-      this.loaded = true;
+       console.log(this.party);
     });
   },
   mounted(){
@@ -126,15 +139,36 @@ export default {
   computed:{
     filterList () {
       if(this.selectedParty === ''){
-        console.log("All party!!");
+       // console.log("All party!!");
         return this.rows;
-      } else {
-        console.log("single party!!");
-        return this.rows.filter(data => data.detail.party === this.selectedParty)
+      } else 
+          if(this.selectedParty!='' && this.selectedPeriods===''){
+       // console.log("single party!!");
+        return this.rows.filter(data => data.detail.party === this.selectedParty);
+      }else if(this.selectedPeriods!='' && this.period1===''){
+    return this.rows.filter(data => (data.detail.party === this.selectedParty && data.detail.date===this.selectedPeriods));
       }
+      else{
+          return this.count.filter((data)=>{
+              let setdate=data.detail.date;
+              console.log(setdate);
+              return (setdate>=this.period1 && setdate<=this.period2);
+          })
+      }
+      
     }
     // end of computes
   },
+  watch: {
+        selectedParty: function() {
+            if (this.selectedParty.length > 0) {
+              console.log(this.selectedParty)
+               this.count=this.rows.filter(data=>data.detail.party===this.selectedParty);
+               console.log(this.count);
+                
+            }
+        }
+    },
   methods:{
       searchSelectChanged(e){
           this.searchSelectType = e.target.selectedIndex;
@@ -165,5 +199,8 @@ export default {
 
 .select,.input{
   margin-right: 20px;
+}
+.space{
+    padding-left:10px;
 }
 </style>

@@ -7,12 +7,21 @@
                         <div>
                             <div class="subtitle">Filter Your Search</div>
                             <div class="select">
-                                <select>
-                                    <option selected disabled>All Party - All Period</option>
-                                    <option>Party wise</option>
-                                    <option>Period wise</option>
+                                <select v-model="selectedParty">
+                                    <option selected value="">All Party</option>
+                                    <option  value="cash">Cash</option>
+                                    <option v-for="party in rows" v-if="party.detail.party.name">{{party.detail.party.name}}</option>
+                                           
                                 </select>
                             </div>
+                            <div class="select">
+                                <select v-model="selectedPeriods" :disabled="selectedParty.length == 0">
+                                    <option selected value="">All Periods</option>
+                                    <option v-for="date in count">{{date.detail.date}}</option>
+                                </select>
+                            </div>
+                            <input type="text" placeholder="Start date" v-model="period1" :disabled="selectedPeriods.length == 0">
+                            <input type="text" v-model="period2" :disabled="period1.length == 0">
                         </div>
                     </div>
                 </div>
@@ -24,33 +33,43 @@
             <tr>
                 <th>Date</th>
                 <th>Invoice No.</th>
-                <th>Items</th>
                 <th>Party Name</th>
+                <th>Items</th>
                 <th>Taxable Value</th>
                 <th><abbr title="Goods Sales Tax">GST</abbr></th>
                 <th>Bill Amount</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="(row,i) in rows">
-                <th>{{ i + 1 }}</th>
+            <tr v-for="(row,i) in filterList">
+                <th>{{ row.detail.date }}</th>
                 <td>
-                    {{ row.date }}
+                    {{ row.detail.invoice }}
                 </td>
-                <td>
-                    {{ row.invoice }}
+                <td> 
+                 <div v-if="row.detail.party.name">
+                 {{row.detail.party.name}}
+                 </div> 
+                 <div v-else>
+                 {{row.detail.party}}
+                 </div> 
                 </td>
-                <td>
-                    {{ row.partyName }}
+                <td v-for="items in row.items">
+                    {{ items.stockName }}
                 </td>
-                <td>
-                    {{row.taxValue}}
+                
+                <td v-for="items in row.items">
+                   {{items.taxableValue}}
                 </td>
-                <td>
-                    {{ row.GST }}
+               
+                <td v-for="items in row.items">
+                    {{ items.gst }}
                 </td>
                 <td>
                     {{ row.amount }}
+                </td>
+                <td>
+                    <button class="button is-info" @click="editEntry(row._id)">Edit</button>
                 </td>
             </tr>
             </tbody>
@@ -59,30 +78,70 @@
 </template>
 
 <script>
+import Datastore from "nedb";
 export default {
   name: "purchase",
   data() {
     return {
-      rows: [
-        {
-          date: "1-4-2017",
-          invoice: "XUV20151212",
-          partyName: "Mr X",
-          GST: "2500",
-          amount: 55500,
-          taxValue: 222,
-        },
-        {
-          date: "2-4-2017",
-          invoice: "ABC20151213",
-          partyName: "Mr Y",
-          GST: "2500",
-          amount: 55500,
-          taxValue: 222,
-        },
-      ],
+      rows:[],
+       db: {},
+       selectedParty:'',
+       selectedPeriods:'',
+       count:'',
+       period1:'',
+       period2:'',
     };
   },
+  created() {
+    this.db.purchase_entry = new Datastore({ filename: "purchase_entry", autoload: true });
+    this.db.purchase_entry.find({}, (err, docs) => {
+      if (err) {
+        alert("Database Error", "Stock Manager");
+      } else {
+        docs.forEach(d => {
+          this.rows.push(d);
+        });
+        console.log('purchase',this.rows);
+      }
+    })
+  },
+  computed:{
+      filterList(){
+          if(this.selectedParty===''){
+              return this.rows;
+          }else if(this.selectedParty!='' && this.selectedPeriods===''){
+          return this.rows.filter(data=>(data.detail.party.name===this.selectedParty || data.detail.party===this.selectedParty));
+          }
+           else if(this.selectedPeriods!='' && this.period1===''){
+             return this.rows.filter(data => ((data.detail.party.name===this.selectedParty || data.detail.party===this.selectedParty)&& data.detail.date===this.selectedPeriods));
+      }
+      else{
+          return this.count.filter((data)=>{
+              let setdate=data.detail.date;
+              console.log(setdate);
+              return (setdate>=this.period1 && setdate<=this.period2);
+          })
+      }
+          
+      }
+      
+  },
+   watch: {
+        selectedParty: function() {
+            if (this.selectedParty.length > 0) {
+              console.log(this.selectedParty)
+               this.count=this.rows.filter(data=>(data.detail.party.name===this.selectedParty||data.detail.party===this.selectedParty));
+               console.log(this.count);
+                
+            }
+        }
+    },
+methods:{
+    editEntry(id){
+          console.log(id);
+          this.$electron.ipcRenderer.send("Create",id);
+      }
+}
 };
 </script>
 
