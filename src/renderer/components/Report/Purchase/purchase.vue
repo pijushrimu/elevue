@@ -21,7 +21,7 @@
                                 </select>
                             </div>
                             <input type="text" placeholder="Start date" v-model="period1" :disabled="selectedPeriods.length == 0">
-                            <input type="text" v-model="period2" :disabled="period1.length == 0">
+                            <input type="text" placeholder="End date" v-model="period2" :disabled="period1.length == 0">
                         </div>
                     </div>
                 </div>
