@@ -10,7 +10,7 @@
                                 <select v-model="selectedParty">
                                     <option selected value="">All Party</option>
                                     <option  value="cash">Cash</option>
-                                    <option v-for="party in rows" v-if="party.detail.party.name">{{party.detail.party.name}}</option>
+                                    <option v-for="party in party">{{party.name}}</option>
                                            
                                 </select>
                             </div>
@@ -20,8 +20,12 @@
                                     <option v-for="date in count">{{date.detail.date}}</option>
                                 </select>
                             </div>
-                            <input type="text" placeholder="Start date" v-model="period1" :disabled="selectedPeriods.length == 0">
-                            <input type="text" placeholder="End date" v-model="period2" :disabled="period1.length == 0">
+                        </div>
+                        <div class="space2">
+                        <input class="input" type="text" placeholder="Start date" v-model="period1" :disabled="selectedPeriods.length == 0">
+                        </div>
+                        <div class="space2">
+                         <input class="input" type="text" placeholder="End date" v-model="period2" :disabled="period1.length == 0">
                         </div>
                     </div>
                 </div>
@@ -42,34 +46,78 @@
             </thead>
             <tbody>
             <tr v-for="(row,i) in filterList">
-                <th>{{ row.detail.date }}</th>
+                <th>
+                <div v-if="isEdit">
+                {{ row.detail.date }}
+                </div>
+                <div v-if="selectedItem===row._id">
+                <input type="text" v-model="row.detail.date":style="{width:130+ 'px'}">
+                </div>
+                </th>
                 <td>
+                <div v-if="isEdit">
                     {{ row.detail.invoice }}
+                </div>
+                <div v-if="selectedItem===row._id">
+                <input type="text" v-model="row.detail.invoice":style="{width:130+ 'px'}">
+                </div>
                 </td>
                 <td> 
+                <div v-if="isEdit">
                  <div v-if="row.detail.party.name">
                  {{row.detail.party.name}}
                  </div> 
                  <div v-else>
                  {{row.detail.party}}
                  </div> 
+                 </div>
+                 <div v-if="selectedItem===row._id">
+                 <input type="text" v-if="row.detail.party.name" v-model="row.detail.party.name":style="{width:130+ 'px'}">
+                 <input type="text" v-else v-model="row.detail.party":style="{width:130+ 'px'}">
+                 </div>
                 </td>
                 <td v-for="items in row.items">
+                <div v-if="isEdit">
                     {{ items.stockName }}
+               </div>
+               <div v-if="selectedItem===row._id">
+
+                 <input type="text"  v-model="items.stockName":style="{width:130+ 'px'}">
+                 </div>
+
                 </td>
-                
+    
                 <td v-for="items in row.items">
+                <div v-if="isEdit">
                    {{items.taxableValue}}
+                 </div>
+                 <div v-if="selectedItem===row._id">
+                 <input type="text"  v-model="items.taxableValue" :style="{width:130+ 'px'}">
+                 </div>
                 </td>
                
                 <td v-for="items in row.items">
-                    {{ items.gst }}
+                <div v-if="isEdit">
+                   {{items.gst}}
+                 </div>
+                 <div v-if="selectedItem===row._id">
+                 <input type="text"  v-model="items.gst":style="{width:130+ 'px'}">
+                 </div>
                 </td>
-                <td>
-                    {{ row.amount }}
+               
+               <td v-for="items in row.items">
+                <div v-if="isEdit">
+                   {{items.gst}}
+                 </div>
+                 <div v-if="selectedItem===row._id">
+                 <input type="text"  v-model="items.gst":style="{width:130+ 'px'}">
+                 </div>
                 </td>
-                <td>
+                <td v-if="isEdit">
                     <button class="button is-info" @click="editEntry(row._id)">Edit</button>
+                </td>
+                <td v-if="!isEdit">
+                    <button class="button is-info" @click="Cancel">Cancel</button>
                 </td>
             </tr>
             </tbody>
@@ -90,6 +138,9 @@ export default {
        count:'',
        period1:'',
        period2:'',
+       party:[],
+       selectedItem:'',
+       isEdit:true,
     };
   },
   created() {
@@ -104,6 +155,18 @@ export default {
         console.log('purchase',this.rows);
       }
     })
+    this.db.party = new Datastore({ filename: "party", autoload: true });
+    this.db.party.find({}, (err, docs) => {
+      if (err !== null) {
+        alert("Error");
+        console.log(err);
+      } else {
+        docs.forEach(d => {
+           this.party.push(d);
+        });
+      }
+       console.log(this.party);
+    });
   },
   computed:{
       filterList(){
@@ -139,12 +202,23 @@ export default {
 methods:{
     editEntry(id){
           console.log(id);
-          this.$electron.ipcRenderer.send("Create",id);
-      }
+          this.selectedItem=id;
+          this.isEdit=false;
+      },
+    Cancel(){
+        this.isEdit=true;
+        this.selectedItem='';
+    }
 }
 };
 </script>
 
 <style scoped>
-
+.select,.input{
+  margin-right: 20px;
+}
+.space2{
+    padding-left:5px;
+    margin-top:23px;
+}
 </style>

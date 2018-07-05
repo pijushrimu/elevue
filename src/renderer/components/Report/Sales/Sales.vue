@@ -21,11 +21,11 @@
 
                           </div>
                           <div>
-                            <input type="text" placeholder="Start Date" v-model="period1" :disabled="selectedPeriods.length == 0">
+                            <input class="input" type="text" placeholder="Start Date" v-model="period1" :disabled="selectedPeriods.length == 0">
 
                           </div>
                           <div class="space">
-                            <input type="text" placeholder="End Date" v-model="period2" :disabled="period1.length==0">
+                            <input class="input" type="text" placeholder="End Date" v-model="period2" :disabled="period1.length==0">
 
                           </div>
                         </div>
@@ -138,12 +138,10 @@ export default {
   },
   computed:{
     filterList () {
-      if(this.selectedParty === ''){
-       // console.log("All party!!");
+      if(this.selectedParty === ''){ 
         return this.rows;
       } else 
           if(this.selectedParty!='' && this.selectedPeriods===''){
-       // console.log("single party!!");
         return this.rows.filter(data => data.detail.party === this.selectedParty);
       }else if(this.selectedPeriods!='' && this.period1===''){
     return this.rows.filter(data => (data.detail.party === this.selectedParty && data.detail.date===this.selectedPeriods));

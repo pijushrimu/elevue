@@ -7,9 +7,16 @@
                         <div>
                             <div class="subtitle">Filter Your Search</div>
                             <div class="select">
-                                <select>
-                                    <option selected value="">All Item</option>
-                                    <option v-for="stock in stocks">{{stock.stockName}}</option>
+                                 <select v-model="stockGroup">
+                                    <option selected value="">ALL Group</option>
+                                    <option v-for="stock in stocks">{{stock.stockGroup}}</option>
+                                    
+                                </select>
+                            </div>
+                            <div class="select">
+                                <select v-model="hsnCode">
+                                    <option selected value="">HSN Code</option>
+                                    <option v-for="stock in count">{{stock.HSNCode}}</option>
                                     
                                 </select>
                             </div>
@@ -42,46 +49,43 @@
             <tr>
                 <th>Serial no</th>
                 <th>Stock Name</th>
-                <th>Invoice No.</th>
-                <th>Invoice Date</th>
-                <th>Party Name</th>
-                <th>GST NO</th>
-                <th>Total Taxable Amount</th>
-                <th>Total GST</th>
-                <th>Total Amount</th>
+                <th>HSN Code</th>
+                <th>Stock Group</th>
+                <th>Tax Category</th>
+                <th>Rate</th>
+                <th>Opening Stock</th>
+                <th>Closing Stock</th>
+                
                 
             </tr>
             </thead>
             <tbody >
                 <!-- "detail":{"invoice":"ANV17PR","date":"2018-04-11","party":"cash","totalAmount":128.57600000000002} -->
-            <tr v-for="(row,i) in rows" >
+            <tr v-for="(row,i) in filterlist" >
                 <th>{{ i + 1 }}</th>
-                <td v-for="items in row.items">
-                    {{items.stockName}}
+                <td>
+                    {{row.stockName}}
                 </td>
                 <td>
-                    {{row.detail.invoice}}
+                    {{row.HSNCode}}
                 </td>
                 <td>
-                   {{row.detail.date}}
+                   {{row.stockGroup}}
                 </td>
                 <td>
-                    {{row.detail.party}}
+                    {{row.taxCategory}}
                 </td>
                 <td>
-                   {{row.detail.date}}
+                   {{row.rate}}
                 </td>
                 <td>
-                   {{row.detail.getTotalTaxableAmount}}
+                   {{row.openingStock}}
                 </td>
                 <td>
-                   {{row.detail.totalGst}}
+                   {{row.rate}}
                 </td>
-                <td>
-                   {{row.detail.totalAmount}}
-                </td>
-                
-                <td>
+
+                 <td>
                     <button class="button is-info" @click="editEntry(row._id)">Edit</button>
                 </td>
             </tr>
@@ -100,6 +104,9 @@ export default {
           stocks:[],
           db:{},
           rows:[],
+          hsnCode:'',
+          stockGroup:'',
+          count:[],
     };
   },
    created() {
@@ -126,7 +133,27 @@ export default {
       }
        console.log('sll',this.rows);
     });
-   }
+   },
+   computed:{
+       filterlist(){
+           if(this.stockGroup===''){
+               return this.stocks;
+           }else if(this.stockGroup!='' && this.hsnCode===''){
+           return this.stocks.filter(element=>element.stockGroup===this.stockGroup);
+       }
+       else return this.stocks.filter(element=>(element.stockGroup===this.stockGroup && element.HSNCode===this.hsnCode));
+       }
+   },
+    watch: {
+        stockGroup: function() {
+            if (this.stockGroup.length > 0) {
+              console.log(this.stockGroup);
+               this.count=this.stocks.filter(data=>data.stockGroup===this.stockGroup);
+               console.log(this.count);
+                
+            }
+        }
+    },
 };
 </script>
 
