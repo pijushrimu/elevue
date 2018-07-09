@@ -10,3 +10,4 @@ thumbs.db
 !.gitkeep
 .idea
 semantic/
+/.idea/jsLinters/eslint.xml
