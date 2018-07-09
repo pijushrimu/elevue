@@ -8,6 +8,5 @@ npm-debug.log
 npm-debug.log.*
 thumbs.db
 !.gitkeep
-.idea
+.idea/
 semantic/
-/.idea/jsLinters/eslint.xml
