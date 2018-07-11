@@ -50,8 +50,6 @@
 <script>
 /* eslint-disable space-before-function-paren */
 
-import Datastore from "nedb";
-
 export default {
   name: "index",
   data() {
@@ -73,47 +71,48 @@ export default {
     },
      submit() {
       // check for empty value
-        let nullValues = false;
         this.rows.forEach(d => {
-            if (d.category== "") {
-                nullValues = true;
+            if (d.category === "") {
+              alert("Non of the Fields can be empty!!", "Stock Manager");
+            } else {
+              this._insertToCategories();_
             }
         });
-        
-        if(!nullValues){
-        
-            this.rows.forEach(d => {
-                this.db.category.findOne({category:d.category}, (err, docs) => {
-                    if (docs !== null) {
-                        // console.log("found");
-                        alert("Error!! Data Already Present in Database")
-                    } else {
-                        // console.log('not found')
-                        this.db.category.insert(this.rows,(err, docs) => {
-                            if (err !== null) {
-                                alert("Error While Adding to Database");
-                                console.log(err);
-                            } else {
-                                alert("SuccessFully Added to Database");
-                                this.rows = [];
-                                this.addRow();
-                            }
-                        });
-                    }
-
-                });
-            });   
-        }else{
-            alert("Non of the Fields can be empty!!", "Stock Manager");
-        }
-        
     },
+    _insertToCategories() {
+        this.rows.forEach(d => {
+          this.db.category.findOne({category:d.category.toLowerCase()}, (err, docs) => {
+            if (docs !== null) {
+              // console.log("found");
+              alert("Error!! Data Already Present in Database");
+            } else {
+              // console.log('not found')
+              let x = this.rows.map((value) => {
+                return {
+                  category: value.category.toLowerCase(),
+                  rateList: []
+                };
+              });
+              this.db.category.insert(x,(err, docs) => {
+                if (err !== null) {
+                  alert("Error While Adding to Database");
+                  console.log(err);
+                } else {
+                  alert("SuccessFully Added to Database");
+                  this.rows = [];
+                  this.addRow();
+                }
+              });
+            }
+          });
+        });
+    }
     // end of methods
   },
   created() {
     // add a new empty row, and connect to database
     this.addRow();
-    this.db.category = new Datastore({ filename: "categories", autoload: true });
+    this.db.category = new this.$db({ filename: "categories", autoload: true });
     // end of created
   },
 };

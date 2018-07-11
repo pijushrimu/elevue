@@ -36,7 +36,7 @@
             <tr v-for="(row,i) in filterList">
                 <th>{{ i + 1 }}</th>
                 <td>
-                    <input class="input" type="text" v-model="row.category" @click="change(row._id)"></input>
+                    <input class="input" type="text" v-model="row.category" @click="change(row._id)">
                 </td>
             </tr>
             </tbody>
@@ -64,7 +64,7 @@ export default {
       let successUpdate = true;
         this.rows.forEach(d => {
             if (d.category !== "") {
-              this.db.category.update({_id:d._id},{$set:{category:d.category}},function(err,numReplaced){
+              this.db.category.update({_id:d._id},{$set:{category:d.category.toLowerCase()}},function(err,numReplaced){
                 if(err!==null){
                   alert("Error! Some of the datas Cannot be inserted ")
                   successUpdate = false;

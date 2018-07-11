@@ -7,7 +7,7 @@
         <div class="level-left">
           <div class="level-item">
             <p class="subtitle is-4">
-              Tax Rate
+              Tax Rate for {{categoryName | capitalize }}
             </p>
           </div>
         </div>

@@ -8,16 +8,19 @@ import store from "./store";
 import "bulma/css/bulma.css";
 import "../../semantic/dist/semantic.min.css";
 import "../../static/bulma-divider.css";
+import Datastore from "nedb";
 
 import AutoComplete from "v-autocomplete";
 import "v-autocomplete/dist/v-autocomplete.css";
 import "vue2-autocomplete-js/dist/style/vue2-autocomplete.css";
+import "./utility/filters";
 
 // importing unitsStore for GST Units
 
 if (!process.env.IS_WEB) Vue.use(require("vue-electron"));
 Vue.http = Vue.prototype.$http = axios;
-Vue.config.productionTip = false;
+Vue.db = Vue.prototype.$db = Datastore;
+Vue.config.productionTip = true;
 
 /* eslint-disable no-new */
 new Vue({

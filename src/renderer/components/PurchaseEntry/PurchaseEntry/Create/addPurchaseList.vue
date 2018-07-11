@@ -38,7 +38,7 @@
                 <td>
                     <input class="input" type="number" placeholder="Discount" v-model="row.discount" @input="discountChanged(row.flag,i)">
                     <br>
-                    <input class="checkbox" name="percentage" type="checkbox" @change="percentageChanged($event,i)" > 
+                    <input class="checkbox" name="percentage" type="checkbox" @change="percentageChanged($event,i)" >
                     <label for="percentage">Percentage</label>
                 </td>
                 <td>
@@ -52,7 +52,7 @@
                 </td>
                 <td>
                     <input class="input" type="number" placeholder="Total Amount" v-model="row.totalAmount">
-        
+
                 </td>
             </tr>
             </tbody>
@@ -115,13 +115,13 @@ export default {
       }else{
         this.rows[i].taxableValue = this.rows[i].amount - this.rows[i].discount;
       }
-    
+
       this.gstChnaged(i);
     },
     taxChanged(i){
       this.gstChnaged(i);
     },
-    
+
     gstChnaged(i){
       this.rows[i].gst = this.rows[i].taxableValue * this.rows[i].taxPer/100;
       this.getTotalAmount(i);
@@ -148,9 +148,9 @@ export default {
             this.rows = [];
             this.addRow();
             alert("Done!!", "Stock Manager");
-            child[0].refresh()
+            child[0].refresh();
             this.$store.dispatch("incrementInvoice")
-            
+
           }
         });
       } else {
@@ -158,14 +158,14 @@ export default {
       }
     },
     selected(event,i){
-      
+
       let stock = this.findStock(event)[0];
       let row = this.rows[i];
       row.stockName = stock.stockName;
       row.HSNCode =  stock.HSNCode;
       row.rate = stock.defaultSP;
       row.taxPer = stock.taxCategory;
-      
+
     },
     addRow() {
       const x = {
@@ -192,13 +192,13 @@ export default {
     },
     checkFields() {
       let nullValues = true;
-      
+
       this.rows.forEach(data => {
         if(data.stockName==""){
           nullValues = false;
         }
       });
-      
+
      return nullValues;
     },
     findStock:function(name){
@@ -208,7 +208,7 @@ export default {
         return data.stockName.match(patt);
       })
     }
-    
+
   },
   created() {
     this.db.stocks = new Datastore({ filename: "stocks", autoload: true });
@@ -223,7 +223,7 @@ export default {
       }
     });
 
-  
+
     this.addRow();
     this.$parent.$on("addRowEvent", this.addRow);
     this.$parent.$on("submitEventExempt", this.submit);
@@ -238,7 +238,7 @@ export default {
     }
     // end of computes
   },
-  
+
 };
 </script>
 

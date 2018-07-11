@@ -69,7 +69,7 @@
             <div class="select">
               <select v-model="row.taxCategory">
                 <option disabled selected>Select Category</option>
-                <option v-for="category in categories">{{ category.category }}</option>
+                <option v-for="category in categories">{{ category | capitalize }}</option>
               </select>
             </div>
           </td>
@@ -135,7 +135,6 @@
 
 <script>
   /* eslint-disable space-before-function-paren */
-  import Datastore from "nedb";
 
 
   export default {
@@ -194,21 +193,15 @@
         this.rows.pop();
       },
       addCategory() {
-        if (this.category !== "") {
-          this.db.categories.findOne({category: this.category},(err, doc) => {
-            if(doc){
-              alert("Category Already Exits!!", "Stock Manager");
-            } else {
-              this._insertToCategory();
-            }
-          });
+        if (this.category !== "" && this.categories.indexOf(this.category.toLowerCase()) === -1) {
+            this._insertToCategory();
         } else {
-          alert("Non of the fields can be empty!!", "Stock Manager");
+          alert("Category Name Already Exits or the field is empty!!", "Stock Manager");
         }
       },
       _insertToCategory(){
         let x = {
-          category: this.category,
+          category: this.category.toLowerCase(),
           rateList: []
         };
         this.db.categories.insert(x);
@@ -260,10 +253,10 @@
       // get the gst codes
       this.addRow();
       this.sublist = this.$store.getters.getSubUnits;
-      this.db.stocks = new Datastore({filename: "stocks", autoload: true});
-      this.db.units = new Datastore({filename: "units", autoload: true});
-      this.db.groups = new Datastore({filename: "groups", autoload: true});
-      this.db.categories = new Datastore({filename: "categories", autoload: true});
+      this.db.stocks = new this.$db({filename: "stocks", autoload: true});
+      this.db.units = new this.$db({filename: "units", autoload: true});
+      this.db.groups = new this.$db({filename: "groups", autoload: true});
+      this.db.categories = new this.$db({filename: "categories", autoload: true});
 
       this.db.units.find({}, (err, docs) => {
         if (err !== null) {
@@ -282,7 +275,7 @@
           console.log(err);
         } else {
           docs.forEach(d => {
-            this.categories.push(d);
+            this.categories.push(d.category);
           });
           // console.log(docs);
         }

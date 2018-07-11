@@ -41,7 +41,7 @@
       <tr v-for="(row,i) in filterList">
         <th>{{ i + 1 }}</th>
         <td>
-          {{row.category}}
+          {{row.category | capitalize }}
         </td>
         <td>
           <button class="button is-primary" @click="() => selectedCategory = row.category">Display</button>
@@ -56,7 +56,6 @@
 </template>
 
 <script>
-import Datastore from "nedb";
 import appTaxRate from './TaxRate';
 
 export default {
@@ -96,7 +95,7 @@ export default {
   },
   created() {
     // connect to database Groups
-    this.db.category = new Datastore({ filename: "categories", autoload: true });
+    this.db.category = new this.$db({ filename: "categories", autoload: true });
     // find names in Group and push to component data
     this.db.category.find({}, (err, docs) => {
       if (err !== null) {
