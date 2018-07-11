@@ -1,5 +1,6 @@
 <template>
-  <div class="container">
+  <div>
+  <div class="container" v-if="selectedCategory === ''">
     <div class="box">
 
       <nav class="level">
@@ -43,25 +44,32 @@
           {{row.category}}
         </td>
         <td>
-          <button class="button is-primary">Display</button>
+          <button class="button is-primary" @click="() => selectedCategory = row.category">Display</button>
         </td>
       </tr>
       </tbody>
     </table>
     </div>
   </div>
+    <app-tax-rate :db="db" :categoryName="selectedCategory" @hide="() => selectedCategory = ''" v-else></app-tax-rate>
+  </div>
 </template>
 
 <script>
 import Datastore from "nedb";
+import appTaxRate from './TaxRate';
 
 export default {
   name: "index",
+  components: {
+    appTaxRate
+  },
   data() {
     return {
       search:"",
       rows: [],
       db: {},
+      selectedCategory: ''
     };
     // end of data
   },
