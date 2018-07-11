@@ -33,6 +33,7 @@
       <tr>
         <th>Serial no.</th>
         <th>Category</th>
+        <th>Tax Rate</th>
       </tr>
       </thead>
       <tbody>
@@ -40,6 +41,9 @@
         <th>{{ i + 1 }}</th>
         <td>
           {{row.category}}
+        </td>
+        <td>
+          <button class="button is-primary">Display</button>
         </td>
       </tr>
       </tbody>
@@ -62,7 +66,7 @@ export default {
     // end of data
   },
   computed:{
-    filterList:function(){
+    filterList:function() {
       return this.rows.filter((data)=>{
         let patt = new RegExp("^"+this.search+"");
         return data.category.match(patt);
@@ -77,7 +81,7 @@ export default {
         title:"Tax Category List",
         table:this.rows,
       }
-      
+
       this.$electron.ipcRenderer.send("showPrint",data);
   },
     // end of methods
