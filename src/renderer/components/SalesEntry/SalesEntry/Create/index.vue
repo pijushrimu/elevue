@@ -37,7 +37,7 @@
                           <button class="button is-info" @click="$emit('addRowEvent')">Add Row</button>
                       </div>
                       <div class="level-item">
-                        <button class="button is-dark" @click="removeRow">Remove Row</button> 
+                        <button class="button is-dark" @click="removeRow">Remove Row</button>
                       </div>
                       <div class="level-item">
                           <button class="button is-dark" @click="addParty = true">Add Party</button>
@@ -51,14 +51,14 @@
                   </div>
               </nav>
           </div>
-          
-          
+
+
           <app-add-party :updateParty="updateParty" :showParty="addParty" @toggleParty="addParty = $event"></app-add-party>
           <app-add-item :updateItem="updateItem" :showItem="addItem" @toggleItem="addItem = $event"> </app-add-item>
       </div>
 
       <!-- table of list -->
-      
+
       <div id="table-scroll">
         <table class="table is-bordered is-striped">
             <thead>
@@ -97,7 +97,7 @@
                 <td>
                     <input class="input" type="number" placeholder="Discount" v-model="row.discount" @input="discountChanged(row.flag,i)">
                     <br>
-                    <input class="checkbox" name="percentage" type="checkbox" @change="percentageChanged($event,i)" > 
+                    <input class="checkbox" name="percentage" type="checkbox" @change="percentageChanged($event,i)" >
                     <label for="percentage">Percentage</label>
                 </td>
                 <td>
@@ -111,13 +111,13 @@
                 </td>
                 <td>
                     <input class="input" type="number" placeholder="Total Amount" v-model="row.totalAmount">
-        
+
                 </td>
             </tr>
             </tbody>
         </table>
         </div>
-        
+
         <div class="sumary">
           <table class="table is-bordered is-striped">
             <thead>
@@ -144,7 +144,7 @@
                 <td v-else></td>
                 <td>{{row.totalAmount}}</td>
               </tr>
-              
+
             </tbody>
             <thead>
               <tr>
@@ -159,9 +159,9 @@
               </tr>
             </thead>
           </table>
-          
+
         </div>
-        
+
     </div>
 </template>
 
@@ -213,7 +213,7 @@ export default {
       summary_IGST: 0,
       summary_totalAmount: 0,
       localParty:true,
-      summary_partyGstNo:"",  
+      summary_partyGstNo:"",
     };
   },
   methods: {
@@ -275,7 +275,7 @@ export default {
         this.rows.pop();
       }
     },
-    
+
     quantityOrRateChanged(i) {
       this.rows[i].amount = this.rows[i].quantity * this.rows[i].rate;
 
@@ -494,7 +494,7 @@ export default {
   created() {
     this.date = this.getToday();
     this.db.stocks = new Datastore({ filename: "stocks", autoload: true });
-    
+
 
     this.db.stocks.find({}, (err, docs) => {
       if (err) {
@@ -520,7 +520,7 @@ export default {
 
     });
 
-    this.addRow();
+    [...Array(10).keys()].map(() => this.addRow());
     this.$on("addRowEvent", this.addRow);
     this.$on("submitEventExempt", this.submit);
     this.db.sales = new Datastore({ filename: "sales", autoload: true });
@@ -547,7 +547,7 @@ export default {
     },
     selectedParty:function(){
       let stateId =  this.selectedParty.gstin.substring(0,2);
-      
+
       if(stateId === "18"){
         this.localParty = true;
       }else{

@@ -22,7 +22,7 @@
         </div>
       </nav>
     </div>
-    <div id="table-scroll">
+    <div class="scrollable">
       <table class="table is-bordered is-striped">
         <thead>
         <tr>
@@ -251,7 +251,7 @@
 
     created() {
       // get the gst codes
-      this.addRow();
+      [...Array(10).keys()].map(() => this.addRow());
       this.sublist = this.$store.getters.getSubUnits;
       this.db.stocks = new this.$db({filename: "stocks", autoload: true});
       this.db.units = new this.$db({filename: "units", autoload: true});
@@ -309,11 +309,6 @@
   };
 </script>
 
-<style scoped>
+<style>
 
-  #table-scroll {
-    overflow-y: auto;
-    overflow-x: hidden;
-    height: 360px;
-  }
 </style>

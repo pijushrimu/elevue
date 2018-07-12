@@ -14,7 +14,7 @@
 
                 <!-- Right side -->
                 <div class="level-right">
-                    
+
                     <div class="level-item">
                         <div class="buttons">
                             <button class="button is-" @click="printList">Export To</button>
@@ -24,22 +24,22 @@
                                 <input class="input" v-model="search" type="text" placeholder="Find a stock">
                             </p>
                             <p class="control select">
-                                
+
                                     <select v-model="searchBy">
                                         <option disabled selected>Search By</option>
                                         <option value="0" >Stock Name</option>
                                         <option  value="1" >Stock Group</option>
                                         <option value="2" >Unit Name</option>
                                     </select>
-                                
+
                             </p>
                         </div>
                     </div>
                 </div>
             </nav>
         </div>
-        <div id="table-scroll">
-        <table class="table is-bordered is-striped is-fullwidth">
+        <div class="scrollable">
+        <table class="table is-bordered is-striped is-fullwidth scrollable">
             <thead>
             <tr>
                 <th>Sl. No.</abbr></th>
@@ -85,7 +85,7 @@
                 <td>
                     {{ row.defaultSP }}
                 </td>
-                
+
             </tr>
             </tbody>
         </table>
@@ -129,7 +129,7 @@ export default {
         title:"Stock List",
         table:this.rows,
       }
-      
+
       this.$electron.ipcRenderer.send("showPrint",data);
   },
   },
@@ -145,7 +145,7 @@ export default {
             case "2":
             return data.unitName.match(patt);
         }
-        
+
       })
     }
   },
@@ -173,7 +173,7 @@ export default {
         docs.forEach(d => {
           this.categories.push(d);
         });
-        
+
       }
     });
     // this.db.location = new Datastore({ filename: "location", autoload: true });

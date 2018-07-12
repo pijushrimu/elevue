@@ -19,14 +19,14 @@
                                 <input class="input" v-model="search" type="text" placeholder="Find a stock">
                             </p>
                             <p class="control select">
-                                
+
                                     <select v-model="searchBy">
                                         <option disabled selected>Search By</option>
                                         <option value="0" >Stock Name</option>
                                         <option  value="1" >Stock Group</option>
                                         <option value="2" >Unit Name</option>
                                     </select>
-                                
+
                             </p>
                             <p class="control">
                               <button class="button is-primary" @click="update">Update</button>
@@ -36,7 +36,7 @@
                 </div>
             </nav>
         </div>
-        <div id="table-scroll">
+        <div class="scrollable">
         <table class="table is-bordered is-striped">
             <thead>
             <tr>
@@ -80,7 +80,7 @@
                   </div>
                 </td>
                 <td>
-                  <p><span>{{row.taxCategory}} </span> &nbsp; <button class="button" @click="openChangeTaxCategoryModal(row)">Change</button></p>                    
+                  <p><span>{{row.taxCategory}} </span> &nbsp; <button class="button" @click="openChangeTaxCategoryModal(row)">Change</button></p>
                 </td>
                 <td>
                   <input class="input" type="text" placeholder="Opening Stock" v-model="row.openingStock">
@@ -108,7 +108,7 @@
                 <section class="modal-card-body">
                     <div>
                             <div class="subtitle">Tax Category</div>
-                            <input class="input" type="text" v-model="previousTaxDataForAUnit.taxCategory" placeholder="Category" >        
+                            <input class="input" type="text" v-model="previousTaxDataForAUnit.taxCategory" placeholder="Category" >
                     </div>
                     <div>
                             <div class="subtitle">From Date:</div>
@@ -161,7 +161,7 @@ export default {
       });
     },
     openChangeTaxCategoryModal(row){
-  
+
       this.previousTaxDataForAUnit = {};
       this.showTaxCategoryUpdateView = true;
       this.previousTaxDataForAUnit.taxCategory = row.taxCategory;
@@ -223,7 +223,7 @@ export default {
             })
           })
         }
-           
+
       }
     });
 
@@ -297,7 +297,7 @@ export default {
       }
 
         if(successUpdate){
-          
+
           this.updateSalesEntry(this.taxCategoriesTobeChanged);
           this.taxCategoriesTobeChanged= [];
           alert("Successfully Updated")
@@ -319,7 +319,7 @@ export default {
             case "2":
             return data.unitName.match(patt);
         }
-        
+
       })
     }
   },

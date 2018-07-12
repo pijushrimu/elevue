@@ -102,4 +102,6 @@ export default {
 .white-text {
   color: white;
 }
+
+
 </style>

@@ -224,7 +224,7 @@ export default {
     });
 
 
-    this.addRow();
+    [...Array(10).keys()].map(() => this.addRow());
     this.$parent.$on("addRowEvent", this.addRow);
     this.$parent.$on("submitEventExempt", this.submit);
     this.db.purchaseEntry = new Datastore({ filename: "purchase_entry", autoload: true });

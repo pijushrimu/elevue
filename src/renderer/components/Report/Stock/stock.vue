@@ -10,14 +10,14 @@
                                  <select v-model="stockGroup">
                                     <option selected value="">ALL Group</option>
                                     <option v-for="stock in stocks">{{stock.stockGroup}}</option>
-                                    
+
                                 </select>
                             </div>
                             <div class="select">
                                 <select v-model="hsnCode">
                                     <option selected value="">HSN Code</option>
                                     <option v-for="stock in count">{{stock.HSNCode}}</option>
-                                    
+
                                 </select>
                             </div>
                         </div>
@@ -41,10 +41,10 @@
                 </div>
             </div>
         </div>
-  
+
     <br>
-    <div id="table">
-     <table class="table is-bordered is-striped is-fullwidth">
+    <div class="scrollable">
+     <table class="table is-bordered is-striped is-fullwidth scrollable">
             <thead>
             <tr>
                 <th>Serial no</th>
@@ -55,8 +55,8 @@
                 <th>Rate</th>
                 <th>Opening Stock</th>
                 <th>Closing Stock</th>
-                
-                
+
+
             </tr>
             </thead>
             <tbody >
@@ -150,7 +150,7 @@ export default {
               console.log(this.stockGroup);
                this.count=this.stocks.filter(data=>data.stockGroup===this.stockGroup);
                console.log(this.count);
-                
+
             }
         }
     },
@@ -158,8 +158,5 @@ export default {
 </script>
 
 <style scoped>
-#table{
-    overflow-y:true;
-}
 
 </style>

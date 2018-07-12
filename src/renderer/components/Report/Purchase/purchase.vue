@@ -11,7 +11,7 @@
                                     <option selected value="">All Party</option>
                                     <option  value="cash">Cash</option>
                                     <option v-for="party in party">{{party.name}}</option>
-                                           
+
                                 </select>
                             </div>
                             <div class="select">
@@ -32,7 +32,8 @@
             </div>
         </div>
         <br/>
-        <table class="table is-bordered is-striped is-fullwidth">
+      <div class="scrollable">
+        <table class="table is-bordered is-striped is-fullwidth scrollable">
             <thead>
             <tr>
                 <th>Date</th>
@@ -62,14 +63,14 @@
                 <input type="text" v-model="row.detail.invoice":style="{width:130+ 'px'}">
                 </div>
                 </td>
-                <td> 
+                <td>
                 <div v-if="isEdit">
                  <div v-if="row.detail.party.name">
                  {{row.detail.party.name}}
-                 </div> 
+                 </div>
                  <div v-else>
                  {{row.detail.party}}
-                 </div> 
+                 </div>
                  </div>
                  <div v-if="selectedItem===row._id">
                  <input type="text" v-if="row.detail.party.name" v-model="row.detail.party.name":style="{width:130+ 'px'}">
@@ -86,7 +87,7 @@
                  </div>
 
                 </td>
-    
+
                 <td v-for="items in row.items">
                 <div v-if="isEdit">
                    {{items.taxableValue}}
@@ -95,7 +96,7 @@
                  <input type="text"  v-model="items.taxableValue" :style="{width:130+ 'px'}">
                  </div>
                 </td>
-               
+
                 <td v-for="items in row.items">
                 <div v-if="isEdit">
                    {{items.gst}}
@@ -104,7 +105,7 @@
                  <input type="text"  v-model="items.gst":style="{width:130+ 'px'}">
                  </div>
                 </td>
-               
+
                <td v-for="items in row.items">
                 <div v-if="isEdit">
                    {{items.gst}}
@@ -122,6 +123,7 @@
             </tr>
             </tbody>
         </table>
+      </div>
     </div>
 </template>
 
@@ -185,9 +187,9 @@ export default {
               return (setdate>=this.period1 && setdate<=this.period2);
           })
       }
-          
+
       }
-      
+
   },
    watch: {
         selectedParty: function() {
@@ -195,7 +197,7 @@ export default {
               console.log(this.selectedParty)
                this.count=this.rows.filter(data=>(data.detail.party.name===this.selectedParty||data.detail.party===this.selectedParty));
                console.log(this.count);
-                
+
             }
         }
     },

@@ -34,7 +34,8 @@
             </div>
         </div>
         <br/>
-        <table class="table is-bordered is-striped is-fullwidth">
+      <div class="scrollable">
+        <table class="table is-bordered is-striped is-fullwidth scrollable">
             <thead>
             <tr>
                 <th>Serial no.</th>
@@ -78,6 +79,7 @@
             </tr>
             </tbody>
         </table>
+      </div>
     </div>
 </template>
 
@@ -138,9 +140,9 @@ export default {
   },
   computed:{
     filterList () {
-      if(this.selectedParty === ''){ 
+      if(this.selectedParty === ''){
         return this.rows;
-      } else 
+      } else
           if(this.selectedParty!='' && this.selectedPeriods===''){
         return this.rows.filter(data => data.detail.party === this.selectedParty);
       }else if(this.selectedPeriods!='' && this.period1===''){
@@ -153,7 +155,7 @@ export default {
               return (setdate>=this.period1 && setdate<=this.period2);
           })
       }
-      
+
     }
     // end of computes
   },
@@ -163,7 +165,7 @@ export default {
               console.log(this.selectedParty)
                this.count=this.rows.filter(data=>data.detail.party===this.selectedParty);
                console.log(this.count);
-                
+
             }
         }
     },
