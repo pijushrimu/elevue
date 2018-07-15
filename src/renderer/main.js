@@ -14,6 +14,8 @@ import AutoComplete from "v-autocomplete";
 import "v-autocomplete/dist/v-autocomplete.css";
 import "vue2-autocomplete-js/dist/style/vue2-autocomplete.css";
 import "./utility/filters";
+import "./assets/css/animate.css";
+import "./utility/mixin";
 
 // importing unitsStore for GST Units
 

@@ -204,11 +204,16 @@
           category: this.category.toLowerCase(),
           rateList: []
         };
-        this.db.categories.insert(x);
-        this.categories.push(x);
-        this.category = "";
-        alert("Done!!", "Stock Manager");
-        this.viewAddCategory = false;
+        this.db.categories.insert(x,(err, newDoc) => {
+          if(!err) {
+            this.categories.push(this.category.toLowerCase());
+            this.category = "";
+            alert("Done!!", "Stock Manager");
+            this.viewAddCategory = false;
+          } else {
+            alert("Error Please Try Again!!", "Stock Manager");
+          }
+        });
       },
       submit() {
         // check for empty value
