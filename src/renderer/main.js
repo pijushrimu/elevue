@@ -1,10 +1,12 @@
 /* eslint-disable no-unused-vars */
 import Vue from "vue";
 import axios from "axios";
+import Promise from "bluebird";
 
 import App from "./App";
 import router from "./router";
 import store from "./store";
+
 import "bulma/css/bulma.css";
 import "../../semantic/dist/semantic.min.css";
 import "../../static/bulma-divider.css";
@@ -22,6 +24,7 @@ import "./utility/mixin";
 if (!process.env.IS_WEB) Vue.use(require("vue-electron"));
 Vue.http = Vue.prototype.$http = axios;
 Vue.db = Vue.prototype.$db = Datastore;
+Vue.promisify = Vue.prototype.$promisify = Promise;
 Vue.config.productionTip = true;
 
 /* eslint-disable no-new */

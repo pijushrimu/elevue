@@ -93,7 +93,6 @@
           alert("Error");
           console.log(err);
         } else {
-          console.log(docs);
           this.rows = docs.rateList;
         }
       });
@@ -101,7 +100,7 @@
     methods: {
       addTaxRate() {
         this.rows.push(this.rate);
-        this.db.category.update({ category: this.categoryName }, { $set: { rateList: this.rows } }, { }, (err, numReplaced) => {
+        this.db.category.update({ category: this.categoryName }, { $set: { rateList: this.rows.sort(this.rateListComparator) } }, { }, (err, numReplaced) => {
           if(err){
             alert("Error Occurred","Stock Manager");
             this.rows.pop();
