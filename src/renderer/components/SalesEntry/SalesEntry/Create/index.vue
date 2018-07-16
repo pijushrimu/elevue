@@ -466,7 +466,7 @@
         let nullValues = true;
 
         this.rows.forEach(data => {
-          if (data.stockName == "") {
+          if (data.stockName === "") {
             nullValues = false;
           }
         });
@@ -479,7 +479,8 @@
         });
       },
       getTaxRate(categoryName, entryDate ,endDate) {
-        // let startDateRange = this._getTaxRateList(categoryName);
+        let startDateRange = this._getTaxRateList(categoryName);
+        return startDateRange.filter((data) => this.inRange(entryDate,data.date, endDate))[0].date
       },
       _getTaxRateList(categoryName){
         return this.category.filter((data) => data.category === categoryName)[0].rateList;

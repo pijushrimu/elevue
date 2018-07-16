@@ -4,5 +4,6 @@
 {"stockName":"moto g","HSNCode":"4646737","unitName":"pieces","stockGroup":"phones","taxCategory":"99","openingStock":"15220","rate":"2","amount":30440,"defaultSP":0,"location":"","_id":"PihIR07r0Elsu9qd"}
 {"stockName":"egg","HSNCode":0,"unitName":"kg","stockGroup":"default","taxCategory":"10","openingStock":0,"rate":0,"amount":0,"defaultSP":0,"location":"","_id":"Sr15EAyNN1s8EZGN"}
 {"stockName":"bag","HSNCode":0,"unitName":"pieces","stockGroup":"default","taxCategory":"15","openingStock":0,"rate":0,"amount":0,"defaultSP":0,"location":"","_id":"VMlT77MTvPis0qBY"}
+{"stockName":"Amul Taaza","HSNCode":"995923","unitName":"Liter","stockGroup":"Milk","taxCategory":"Milk","openingStock":"22","rate":"3","amount":66,"defaultSP":0,"location":"","_id":"WZNFyz8WSsYL4MAr"}
 {"stockName":"pencil","HSNCode":"8888","unitName":"pieces","stockGroup":"New","taxCategory":"5","openingStock":"1000","rate":"2","amount":2000,"defaultSP":0,"location":"","_id":"uO2k3jI2mveo6DO6"}
 {"stockName":"Table","HSNCode":"2456","unitName":"kg","stockGroup":"default","taxCategory":"7","openingStock":0,"rate":0,"amount":0,"defaultSP":0,"location":"","_id":"wKAhzhHnIRbgbuBx"}
