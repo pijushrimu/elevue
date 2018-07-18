@@ -99,14 +99,20 @@
     },
     methods: {
       addTaxRate() {
-        this.rows.push(this.rate);
-        this.db.category.update({ category: this.categoryName }, { $set: { rateList: this.rows.sort(this.rateListComparator) } }, { }, (err, numReplaced) => {
+        let temp = this.rows.slice();
+        temp.push(this.rate);
+        this.db.category.update({ category: this.categoryName }, { $set: { rateList: temp.sort(this.rateListComparator) } }, { }, (err, numReplaced) => {
           if(err){
             alert("Error Occurred","Stock Manager");
-            this.rows.pop();
+            // this.rows.pop();
           } else {
             alert("New Rate Added","Stock Manager");
             this.viewAddNewRate = false;
+            this.rows = temp.slice();
+            this.rate = {
+              value: '',
+              date: ''
+            }
           }
         });
       }

@@ -480,10 +480,14 @@
       },
       getTaxRate(categoryName, entryDate ,endDate) {
         let startDateRange = this._getTaxRateList(categoryName);
-        return startDateRange.filter((data) => this.inRange(entryDate,data.date, endDate))[0].date
+        let dates = startDateRange.filter((data) => this.inRange(entryDate,data.date, endDate));
+        console.log("At getTaxRate", dates);
+        return dates[0].value;
       },
       _getTaxRateList(categoryName){
-        return this.category.filter((data) => data.category === categoryName)[0].rateList;
+        let list = this.category.filter((data) => data.category === categoryName.toLowerCase());
+        console.log("At _getTaxRateList ",categoryName," ",list);
+        return list[0].rateList;
       }
     },
     created() {
