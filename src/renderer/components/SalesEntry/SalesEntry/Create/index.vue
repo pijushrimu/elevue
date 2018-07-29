@@ -482,7 +482,7 @@
         let startDateRange = this._getTaxRateList(categoryName);
         let dates = startDateRange.filter((data) => this.inRange(entryDate,data.date, endDate));
         console.log("At getTaxRate", dates);
-        return dates[0].value;
+        return dates[dates.length-1].value;
       },
       _getTaxRateList(categoryName){
         let list = this.category.filter((data) => data.category === categoryName.toLowerCase());
@@ -595,18 +595,18 @@
 </script>
 
 <style scoped>
-  #table-scroll {
-    overflow-y: auto;
-    overflow-x: hidden;
-    height: 330px;
-  }
+#table-scroll {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 330px;
+}
 
-  .sumary {
-    position: absolute;
-    bottom: 10px;
-  }
+.sumary {
+  position: absolute;
+  bottom: 10px;
+}
 
-  .partyDetailDiv {
-    margin-top: -50px;
-  }
+.partyDetailDiv {
+  margin-top: -50px;
+}
 </style>
