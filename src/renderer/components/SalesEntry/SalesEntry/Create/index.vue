@@ -17,7 +17,7 @@
                   <div class="select">
                     <select v-model="selectedParty">
                       <option value="cash" selected>cash</option>
-                      <option v-for="account in party" :value="account">{{account.name}}</option>
+                      <option v-for="(account,i) in party" :key="i" :value="account">{{account.name}}</option>
                     </select>
                   </div>
                 </div>
@@ -77,7 +77,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="(row,i) in rows">
+        <tr v-for="(row,i) in rows" :key="i">
           <th>{{ i + 1 }}</th>
           <td>
             <auto-complete ref="complete" v-if="reload" :items="stocks" v-model="row.stockName"
