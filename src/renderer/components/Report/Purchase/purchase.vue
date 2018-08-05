@@ -203,9 +203,10 @@ export default {
     },
 methods:{
     editEntry(id){
-          console.log(id);
-          this.selectedItem=id;
-          this.isEdit=false;
+        //   console.log(id);
+        //   this.selectedItem=id;
+        //   this.isEdit=false;
+        this.$electron.ipcRenderer.send("editPurchase",id);
       },
     Cancel(){
         this.isEdit=true;
@@ -216,11 +217,12 @@ methods:{
 </script>
 
 <style scoped>
-.select,.input{
+.select,
+.input {
   margin-right: 20px;
 }
-.space2{
-    padding-left:5px;
-    margin-top:23px;
+.space2 {
+  padding-left: 5px;
+  margin-top: 23px;
 }
 </style>

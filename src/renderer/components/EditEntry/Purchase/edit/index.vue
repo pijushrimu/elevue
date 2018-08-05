@@ -172,8 +172,8 @@
 <script>
 import Datastore from "nedb";
 
-import appAddParty from "../../widgets/addParty";
-import appAddItem from "../../widgets/addItem";
+import appAddParty from "../../../widgets/addParty";
+import appAddItem from "../../../widgets/addItem";
 const remote = require('electron').remote;
 
 export default {
@@ -643,7 +643,7 @@ export default {
   position: absolute;
   bottom: 10px;
 }
-.partyDetailDiv{
+.partyDetailDiv {
   /* margin-top: -50px; */
 }
 </style>

@@ -1,35 +1,35 @@
 /* eslint-disable no-new */
-"use strict";
+'use strict';
 
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain } from 'electron';
 
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
-if (process.env.NODE_ENV !== "development") {
-  global.__static = require("path")
-    .join(__dirname, "/static")
-    .replace(/\\/g, "\\\\");
+if (process.env.NODE_ENV !== 'development') {
+  global.__static = require('path')
+    .join(__dirname, '/static')
+    .replace(/\\/g, '\\\\');
 }
 
 let mainWindow;
 
 const winURL =
-  process.env.NODE_ENV === "development"
+  process.env.NODE_ENV === 'development'
     ? `http://localhost:9080`
     : `file://${__dirname}/index.html`;
 
-const editEntryURL =
-    process.env.NODE_ENV === "development"
-      ? `http://localhost:9080/#/edit`
-      : `file://${__dirname}/index.html#edit`;
-const printURL =
-  process.env.NODE_ENV === "development"
-    ? `http://localhost:9080/#/print`
-    : `file://${__dirname}/index.html#print`;
+// // Url for Edit entry
+// const editEntryURL =
+//   process.env.NODE_ENV === 'development'
+//     ? `http://localhost:9080/#/editSales`
+//     : `file://${__dirname}/index.html#editSales`;
 
-
+const urlGenerator = url =>
+  process.env.NODE_ENV === 'development'
+    ? `http://localhost:9080/#/${url}`
+    : `file://${__dirname}/index.html#${url}`;
 
 function createWindow() {
   /**
@@ -40,72 +40,57 @@ function createWindow() {
     height: 563,
     useContentSize: true,
     show: false,
-    minWidth: 1050,
+    minWidth: 1050
   });
+
   mainWindow.setMenu(null);
   mainWindow.loadURL(winURL);
-  mainWindow.on("closed", () => {
+  mainWindow.on('closed', () => {
     mainWindow = null;
   });
-  mainWindow.once("ready-to-show", () => mainWindow.show());
-  
-
+  mainWindow.once('ready-to-show', () => mainWindow.show());
 }
 
-app.on("ready", createWindow);
+app.on('ready', createWindow);
 
-ipcMain.on("showPrint", (e, data)=> {
-  let win = new BrowserWindow({
-    width: 1050,
-    height: 500,
-    show: false,
-  });
-  win.openDevTools();
-  win.on("close", function() {
-    win = null;
-  });
-  win.loadURL(printURL);
-  win.show();
-  win.webContents.on('did-finish-load',function(){
-    win.webContents.send("message",data);
-  })
-  
-});
-
-ipcMain.on("edit", (e,data)=> {
-  let win = new BrowserWindow({
-    width: 1050,
-    height: 500,
-    show: false,
-  });
-  win.openDevTools();
-  win.on("close", function() {
-    win = null;
-  });
-  win.loadURL(editEntryURL);
-  win.webContents.on('did-finish-load',function(){
+const showUrl = (url, dev) => {
+  return (e, data) => {
+    let win = new BrowserWindow({
+      width: 1050,
+      height: 500,
+      show: false
+    });
+    win.on('close', function() {
+      win = null;
+    });
+    if (dev) {
+      win.openDevTools();
+    }
+    win.setMenu(null);
+    win.loadURL(url);
     win.show();
-    win.focus();
-    win.webContents.send("message",data);
-  })
-  
-  win.webContents.on('close',function(){
-    
-    mainWindow.webContents.send("reload");
+    win.webContents.on('did-finish-load', function() {
+      win.webContents.send('message', data);
+    });
+  };
+};
 
-  })
-  
-});
+// Electon will listen to event and on receiving the event it will open new window with the given url
+ipcMain.on('showPrint', showUrl(urlGenerator('print')));
+// Electon will listen to event and on receiving the event it will open new window with the given url
+ipcMain.on('editSales', showUrl(urlGenerator('editSales')));
+// Electon will listen to event and on receiving the event it will open new window with the given url
+ipcMain.on('editPurchase', showUrl(urlGenerator('editPurchase')));
+// Electon will listen to event and on receiving the event it will open new window with the given url
+ipcMain.on('editStock', showUrl(urlGenerator('editStock')));
 
-
-
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
     app.quit();
   }
 });
 
-app.on("activate", () => {
+app.on('activate', () => {
   if (mainWindow === null) {
     createWindow();
   }

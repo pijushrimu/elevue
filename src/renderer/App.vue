@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <app-landing-page v-if="$route.path !== '/print' && $route.path !== '/edit' "></app-landing-page>
+    <app-landing-page v-if="$route.path !== '/print' && $route.path !== '/editSales' && $route.path !== '/editPurchase' && $route.path !== '/editStock'"></app-landing-page>
     <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" mode="out-in">
       <router-view></router-view>
     </transition>
@@ -20,17 +20,18 @@
 </script>
 
 <style>
-  /* CSS */
-  html, body {
-    height: 100%;
-    overflow: hidden;
-  }
+/* CSS */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
 
-  .scrollable {
-    overflow-y: auto;
-    overflow-x: hidden;
-    height: 360px;
-    margin-bottom: 50px;
-    padding-bottom: 50px;
-  }
+.scrollable {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 360px;
+  margin-bottom: 50px;
+  padding-bottom: 50px;
+}
 </style>

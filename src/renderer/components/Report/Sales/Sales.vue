@@ -175,7 +175,7 @@ export default {
           console.log(this.searchSelectType)
       },
       editEntry(id){
-          this.$electron.ipcRenderer.send("edit",id);
+          this.$electron.ipcRenderer.send("editSales",id);
       },
 
       reloadRows(){
@@ -196,11 +196,11 @@ export default {
 </script>
 
 <style scoped>
-
-.select,.input{
+.select,
+.input {
   margin-right: 20px;
 }
-.space{
-    padding-left:10px;
+.space {
+  padding-left: 10px;
 }
 </style>

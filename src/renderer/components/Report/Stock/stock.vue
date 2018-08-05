@@ -134,6 +134,11 @@ export default {
        console.log('sll',this.rows);
     });
    },
+   methods: {
+       editEntry(id){
+           this.$electron.ipcRenderer.send("editStock",id);
+       }
+   },
    computed:{
        filterlist(){
            if(this.stockGroup===''){
@@ -158,5 +163,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
