@@ -162,9 +162,9 @@ export default {
   watch: {
         selectedParty: function() {
             if (this.selectedParty.length > 0) {
-              console.log(this.selectedParty)
-               this.count=this.rows.filter(data=>data.detail.party===this.selectedParty);
-               console.log(this.count);
+                console.log(this.selectedParty)
+                this.count=this.rows.filter(data=>data.detail.party===this.selectedParty);
+                console.log(this.count);
 
             }
         }
