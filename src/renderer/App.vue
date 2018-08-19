@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <app-landing-page v-if="$route.path !== '/print' && $route.path !== '/editSales' && $route.path !== '/editPurchase' && $route.path !== '/editStock'"></app-landing-page>
+    <app-landing-page v-if="$route.path !== '/print' && $route.path !== '/editSales' && $route.path !== '/editPurchase'"></app-landing-page>
     <!-- <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" mode="out-in"> -->
       <router-view></router-view>
     <!-- </transition> -->
