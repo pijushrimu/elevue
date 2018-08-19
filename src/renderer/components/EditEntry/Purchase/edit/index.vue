@@ -548,7 +548,7 @@ export default {
       if(this.party.length < 1){
        return false; 
       }
-      return this.party.filter(part => part.gstin == gstNo)[0];
+      return this.party.filter(part => part.gstin === gstNo)[0];
     }
   },
   created() {
