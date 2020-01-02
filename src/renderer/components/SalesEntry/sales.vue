@@ -1,14 +1,16 @@
 <template>
-    <div>
-        <!-- <nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
+  <div>
+    <!-- <nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
             <div class="container">
                 <div class="navbar-tabs">
                     <a class="navbar-item is-tab" :class="{ 'is-active' : isActive('Sales Entry')}" @click="changeView('Sales Entry')">Sales Entry</a>
                 </div>
             </div>
-        </nav> -->
-        <sales-entry v-if="willShow === 'Sales Entry'"></sales-entry>
+    </nav>-->
+    <div class="container">
+      <sales-entry v-if="willShow === 'Sales Entry'"></sales-entry>
     </div>
+  </div>
 </template>
 
 <script>
@@ -17,11 +19,11 @@ import salesEntry from "./SalesEntry/entry";
 export default {
   name: "index",
   components: {
-    salesEntry,
+    salesEntry
   },
   data() {
     return {
-      willShow: "Sales Entry",
+      willShow: "Sales Entry"
     };
   },
   methods: {
@@ -32,11 +34,10 @@ export default {
       if (this.willShow === view) {
         return true;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style scoped>
-
 </style>

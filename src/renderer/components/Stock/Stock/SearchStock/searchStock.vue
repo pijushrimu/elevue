@@ -196,6 +196,5 @@ export default {
 #table-scroll{
     overflow-y:auto;
     overflow-x: hidden;
-    height:360px;
 }
 </style>

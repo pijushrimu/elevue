@@ -1,14 +1,16 @@
 <template>
-    <div>
-        <!-- <nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
+  <div>
+    <!-- <nav class="navbar has-shadow" role="navigation" aria-label="main navigation">
             <div class="container">
                 <div class="navbar-tabs">
                     <a class="navbar-item is-tab" :class="{ 'is-active' : isActive('Sales Entry')}" @click="changeView('Sales Entry')">Sales Entry</a>
                 </div>
             </div>
-        </nav> -->
-        <purchase-entry v-if="willShow === 'Purchase Entry'"></purchase-entry>
+    </nav>-->
+    <div class="container">
+      <purchase-entry v-if="willShow === 'Purchase Entry'"></purchase-entry>
     </div>
+  </div>
 </template>
 
 <script>
@@ -17,11 +19,11 @@ import purchaseEntry from "./PurchaseEntry/entry";
 export default {
   name: "index",
   components: {
-    purchaseEntry,
+    purchaseEntry
   },
   data() {
     return {
-      willShow: "Purchase Entry",
+      willShow: "Purchase Entry"
     };
   },
   methods: {
@@ -32,11 +34,10 @@ export default {
       if (this.willShow === view) {
         return true;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style scoped>
-
 </style>

@@ -1,78 +1,92 @@
 <template>
-<div class="section">
-  <div class="column is-primary">
-              
-    <div class="container-fluid partyDetailDiv">
-        <div class="box">
+  <div class="container">
+    <div class="section">
+      <div class="column is-primary">
+        <div class="container-fluid partyDetailDiv">
+          <div class="box">
             <nav class="level">
-                <div class="level-left">
-                  <div class="level-item">
-                        <div>
-                            <div>
-                                <div class="subtitle">Party A/C Name:</div>
-                                <div class="select">
-                                    <select v-model="selectedParty">
-                                        <option  value="cash" selected>cash</option>
-                                        <option v-for="account in getparties" :value="account">{{account.name}}</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
+              <div class="level-left">
+                <div class="level-item">
+                  <div>
+                    <div>
+                      <div class="subtitle">Party A/C Name:</div>
+                      <div class="select">
+                        <select v-model="selectedParty">
+                          <option value="cash" selected>cash</option>
+                          <option v-for="account in getparties" :value="account">{{account.name}}</option>
+                        </select>
+                      </div>
                     </div>
-                    <div class="level-item">
-                        <div>
-                            <div class="subtitle">Credit Note Number:</div>
-                            <input class="input" placeholder="Number" v-model="creditNumber" type="number">
-                        </div>
-                    </div>
-                    <div class="level-item">
-                        <div>
-                            <div>
-                                <div class="subtitle">Original Invoice No.:</div>
-                                <input class="input" placeholder="invoice" v-model="originalInvoiceNumber" type="number">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="level-item">
-                        <div>
-                            <div>
-                                <div class="subtitle">Original date:</div>
-                                <input class="input" placeholder="invoice" v-model="originalDate" type="date">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="level-item">
-                        <div>
-                            <div>
-                                <div class="subtitle">Current Date:</div>
-                                <input class="input" placeholder="date" v-model="date" type="date">
-                            </div>
-                        </div>
-                    </div>
+                  </div>
                 </div>
-                <div class="level-right">
-                    <div class="level-item">
-                        <button class="button is-info" @click="$emit('addRowEvent')">Add Row</button>
-                    </div>
-                    <div class="level-item">
-                        <button class="button is-dark" @click="addParty = true">Add Party</button>
-                    </div>
-                    <div class="level-item">
-                        <button class="button is-dark" @click="addItem = true">Add Item</button>
-                    </div>
-                    <div class="level-item">
-                        <button class="button is-success" @click="submitEvent">Save</button>
-                    </div>
+                <div class="level-item">
+                  <div>
+                    <div class="subtitle">Credit Note Number:</div>
+                    <input class="input" placeholder="Number" v-model="creditNumber" type="number" />
+                  </div>
                 </div>
+                <div class="level-item">
+                  <div>
+                    <div>
+                      <div class="subtitle">Original Invoice No.:</div>
+                      <input
+                        class="input"
+                        placeholder="invoice"
+                        v-model="originalInvoiceNumber"
+                        type="number"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="level-item">
+                  <div>
+                    <div>
+                      <div class="subtitle">Original date:</div>
+                      <input class="input" placeholder="invoice" v-model="originalDate" type="date" />
+                    </div>
+                  </div>
+                </div>
+                <div class="level-item">
+                  <div>
+                    <div>
+                      <div class="subtitle">Current Date:</div>
+                      <input class="input" placeholder="date" v-model="date" type="date" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="level-right">
+                <div class="level-item">
+                  <button class="button is-info" @click="$emit('addRowEvent')">Add Row</button>
+                </div>
+                <div class="level-item">
+                  <button class="button is-dark" @click="addParty = true">Add Party</button>
+                </div>
+                <div class="level-item">
+                  <button class="button is-dark" @click="addItem = true">Add Item</button>
+                </div>
+                <div class="level-item">
+                  <button class="button is-success" @click="submitEvent">Save</button>
+                </div>
+              </div>
             </nav>
+          </div>
+
+          <app-add-purchase-list
+            ref="addSalesList"
+            :party="selectedParty"
+            :data="{ date,creditNumber:creditNumber, party: selectedParty,originalInvoiceNumber:originalInvoiceNumber,originalDate:originalDate }"
+          ></app-add-purchase-list>
+          <app-add-party
+            :updateParty="updateParty"
+            :showParty="addParty"
+            @toggleParty="addParty = $event"
+          ></app-add-party>
+          <app-add-item :updateItem="updateItem" :showItem="addItem" @toggleItem="addItem = $event"></app-add-item>
         </div>
-        
-        <app-add-purchase-list ref="addSalesList" :party="selectedParty" :data="{ date,creditNumber:creditNumber, party: selectedParty,originalInvoiceNumber:originalInvoiceNumber,originalDate:originalDate }"></app-add-purchase-list>
-        <app-add-party :updateParty="updateParty" :showParty="addParty" @toggleParty="addParty = $event"></app-add-party>
-        <app-add-item :updateItem="updateItem" :showItem="addItem" @toggleItem="addItem = $event"> </app-add-item>
+      </div>
     </div>
   </div>
-</div>
 </template>
 <script>
 import appAddPurchaseList from "./addPurchaseList";
@@ -81,22 +95,20 @@ import appAddItem from "../../widgets/addItem";
 
 import Datastore from "nedb";
 
-import {
-  mapGetters
-} from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
     appAddPurchaseList,
     appAddParty,
-    appAddItem,
+    appAddItem
   },
   data() {
     return {
       date: "",
-      creditNumber:"",
-      originalInvoiceNumber:"",
-      originalDate:"",
+      creditNumber: "",
+      originalInvoiceNumber: "",
+      originalDate: "",
       viewToken: 0,
       addParty: false,
       addItem: false,
@@ -108,8 +120,8 @@ export default {
         number: 0,
         prefix: "",
         suffix: 0,
-        enable: false,
-      },
+        enable: false
+      }
     };
   },
   methods: {
@@ -134,27 +146,27 @@ export default {
     checkFields() {
       return true;
     },
-    getToday(){
+    getToday() {
       let today = new Date();
       let dd = today.getDate();
       let mm = today.getMonth() + 1;
       let yyyy = today.getFullYear();
       if (dd < 10) {
-        dd = '0' + dd
+        dd = "0" + dd;
       }
       if (mm < 10) {
-        mm = '0' + mm
+        mm = "0" + mm;
       }
 
-      today = yyyy + '-' + mm + '-' + dd;
+      today = yyyy + "-" + mm + "-" + dd;
       return today.toString();
     }
   },
   created() {
     this.date = this.getToday();
-    
+
     // connect to database Groups
-     this.db.party = new Datastore({ filename: "party", autoload: true });
+    this.db.party = new Datastore({ filename: "party", autoload: true });
     // find names in Group and push to component data
     this.db.party.find({}, (err, docs) => {
       if (err !== null) {
@@ -162,10 +174,9 @@ export default {
         console.log(err);
       } else {
         docs.forEach(d => {
-           this.party.push(d);
+          this.party.push(d);
         });
       }
-
     });
   },
   computed: {
@@ -174,11 +185,10 @@ export default {
       "getInvoicePrefix",
       "getInvoiceSuffix",
       "getEnableInvoice",
-      "getBillFormat",
+      "getBillFormat"
     ]),
 
-
-    getparties(){
+    getparties() {
       return this.party;
     }
   },
@@ -201,7 +211,7 @@ export default {
     getEnableInvoice() {
       this.invoice.enable = this.getEnableInvoice;
       this.formatInvoiceNumber(this.invoice);
-    },
+    }
   },
   mounted() {
     this.viewToken = this.getBillFormat;
@@ -210,13 +220,12 @@ export default {
     this.invoice.prefix = this.getInvoicePrefix;
     this.invoice.enable = this.getEnableInvoice;
     this.formatInvoiceNumber(this.invoice);
-  },
+  }
 };
-
 </script>
 
 <style scoped>
-.partyDetailDiv{
-  margin-top:-50px;
+.partyDetailDiv {
+  margin-top: -50px;
 }
 </style>
