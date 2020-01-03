@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <br />
     <div class="section">
       <div class="column is-primary">
         <div class="container-fluid partyDetailDiv">

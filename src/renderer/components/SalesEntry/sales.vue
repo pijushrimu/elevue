@@ -7,6 +7,7 @@
                 </div>
             </div>
     </nav>-->
+    <br />
     <div class="container">
       <sales-entry v-if="willShow === 'Sales Entry'"></sales-entry>
     </div>

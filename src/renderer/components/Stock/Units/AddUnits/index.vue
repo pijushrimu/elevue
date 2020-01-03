@@ -21,7 +21,7 @@
         </div>
       </nav>
     </div>
-    <div id="table-scroll">
+    <div class="scrollable">
       <table class="table is-bordered is-striped is-fullwidth">
         <thead>
           <tr>

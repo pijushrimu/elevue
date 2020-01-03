@@ -4,7 +4,9 @@
       v-if="$route.path !== '/print' && $route.path !== '/editSales' && $route.path !== '/editPurchase' && $route.path !== '/editStock'"
     ></app-landing-page>
     <!-- <transition enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" mode="out-in"> -->
-    <router-view></router-view>
+    <div :class="classObject">
+      <router-view></router-view>
+    </div>
     <!-- </transition> -->
   </div>
 </template>
@@ -17,6 +19,17 @@ export default {
   name: "elevue",
   components: {
     appLandingPage: LandingPage
+  },
+  computed: {
+    classObject() {
+      return {
+        "app-content":
+          this.$route.path !== "/print" &&
+          this.$route.path !== "/editSales" &&
+          this.$route.path !== "/editPurchase" &&
+          this.$route.path !== "/editStock"
+      };
+    }
   }
 };
 </script>
@@ -30,8 +43,12 @@ body {
 }
 
 .scrollable {
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow-y: scroll;
+  max-height: 400px;
   margin-bottom: 50px;
+}
+
+.app-content {
+  margin-top: 85px;
 }
 </style>

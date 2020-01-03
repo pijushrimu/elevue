@@ -17,11 +17,6 @@
       </div>
     </nav>
     <section class="hero is-primary">
-      <div class="hero-body">
-        <div class="container has-text-centered">
-          <div class="title">Your Stock Manager</div>
-        </div>
-      </div>
       <div class="hero-foot">
         <nav class="tabs is-boxed is-fullwidth">
           <div class="container">
@@ -141,5 +136,12 @@ export default {
 
 .white-text {
   color: white;
+}
+
+.wrapperDiv {
+  position: fixed;
+  top: 0;
+  z-index: 40;
+  width: 100%;
 }
 </style>

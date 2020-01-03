@@ -1,88 +1,101 @@
 <template>
-  <div class="container">
-    <div class="section">
-      <div class="column is-primary">
-        <div class="container-fluid partyDetailDiv">
-          <div class="box">
-            <nav class="level">
-              <div class="level-left">
-                <div class="level-item">
-                  <div>
+  <div>
+    <!-- <nav class="navbar has-shadow" role="navigation" aria-label="main navigation"></nav> -->
+    <br />
+    <div class="container">
+      <div class="section">
+        <div class="column is-primary">
+          <div class="container-fluid partyDetailDiv">
+            <div class="box">
+              <nav class="level">
+                <div class="level-left">
+                  <div class="level-item">
                     <div>
-                      <div class="subtitle">Party A/C Name:</div>
-                      <div class="select">
-                        <select v-model="selectedParty">
-                          <option value="cash" selected>cash</option>
-                          <option v-for="account in getparties" :value="account">{{account.name}}</option>
-                        </select>
+                      <div>
+                        <div class="subtitle">Party A/C Name:</div>
+                        <div class="select">
+                          <select v-model="selectedParty">
+                            <option value="cash" selected>cash</option>
+                            <option v-for="account in getparties" :value="account">{{account.name}}</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="level-item">
+                    <div>
+                      <div class="subtitle">Debit Note Number:</div>
+                      <input class="input" placeholder="Number" v-model="debitNumber" type="number" />
+                    </div>
+                  </div>
+                  <div class="level-item">
+                    <div>
+                      <div>
+                        <div class="subtitle">Original Invoice No.:</div>
+                        <input
+                          class="input"
+                          placeholder="invoice"
+                          v-model="originalInvoiceNumber"
+                          type="number"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="level-item">
+                    <div>
+                      <div>
+                        <div class="subtitle">Original date:</div>
+                        <input
+                          class="input"
+                          placeholder="invoice"
+                          v-model="originalDate"
+                          type="date"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div class="level-item">
+                    <div>
+                      <div>
+                        <div class="subtitle">Current Date:</div>
+                        <input class="input" placeholder="date" v-model="date" type="date" />
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="level-item">
-                  <div>
-                    <div class="subtitle">Debit Note Number:</div>
-                    <input class="input" placeholder="Number" v-model="debitNumber" type="number" />
+                <div class="level-right">
+                  <div class="level-item">
+                    <button class="button is-info" @click="$emit('addRowEvent')">Add Row</button>
+                  </div>
+                  <div class="level-item">
+                    <button class="button is-dark" @click="addParty = true">Add Party</button>
+                  </div>
+                  <div class="level-item">
+                    <button class="button is-dark" @click="addItem = true">Add Item</button>
+                  </div>
+                  <div class="level-item">
+                    <button class="button is-success" @click="submitEvent">Save</button>
                   </div>
                 </div>
-                <div class="level-item">
-                  <div>
-                    <div>
-                      <div class="subtitle">Original Invoice No.:</div>
-                      <input
-                        class="input"
-                        placeholder="invoice"
-                        v-model="originalInvoiceNumber"
-                        type="number"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div class="level-item">
-                  <div>
-                    <div>
-                      <div class="subtitle">Original date:</div>
-                      <input class="input" placeholder="invoice" v-model="originalDate" type="date" />
-                    </div>
-                  </div>
-                </div>
-                <div class="level-item">
-                  <div>
-                    <div>
-                      <div class="subtitle">Current Date:</div>
-                      <input class="input" placeholder="date" v-model="date" type="date" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="level-right">
-                <div class="level-item">
-                  <button class="button is-info" @click="$emit('addRowEvent')">Add Row</button>
-                </div>
-                <div class="level-item">
-                  <button class="button is-dark" @click="addParty = true">Add Party</button>
-                </div>
-                <div class="level-item">
-                  <button class="button is-dark" @click="addItem = true">Add Item</button>
-                </div>
-                <div class="level-item">
-                  <button class="button is-success" @click="submitEvent">Save</button>
-                </div>
-              </div>
-            </nav>
-          </div>
+              </nav>
+            </div>
 
-          <app-add-purchase-list
-            ref="addSalesList"
-            :party="selectedParty"
-            :data="{ date,debitNumber:debitNumber, party: selectedParty,originalInvoiceNumber:originalInvoiceNumber,originalDate:originalDate }"
-          ></app-add-purchase-list>
-          <app-add-party
-            :updateParty="updateParty"
-            :showParty="addParty"
-            @toggleParty="addParty = $event"
-          ></app-add-party>
-          <app-add-item :updateItem="updateItem" :showItem="addItem" @toggleItem="addItem = $event"></app-add-item>
+            <app-add-purchase-list
+              ref="addSalesList"
+              :party="selectedParty"
+              :data="{ date,debitNumber:debitNumber, party: selectedParty,originalInvoiceNumber:originalInvoiceNumber,originalDate:originalDate }"
+            ></app-add-purchase-list>
+            <app-add-party
+              :updateParty="updateParty"
+              :showParty="addParty"
+              @toggleParty="addParty = $event"
+            ></app-add-party>
+            <app-add-item
+              :updateItem="updateItem"
+              :showItem="addItem"
+              @toggleItem="addItem = $event"
+            ></app-add-item>
+          </div>
         </div>
       </div>
     </div>

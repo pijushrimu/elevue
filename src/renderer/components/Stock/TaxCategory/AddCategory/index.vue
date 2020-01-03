@@ -83,21 +83,19 @@ export default {
           (err, docs) => {
             if (docs !== null) {
               // console.log("found");
-              alert("Error!! Data Already Present in Database");
+              alert(`Error!! ${d.category} Already Present in Database`);
             } else {
               // console.log('not found')
-              let x = this.rows.map(value => {
-                return {
-                  category: value.category.toLowerCase(),
-                  rateList: []
-                };
-              });
+              let x = {
+                category: d.category.toLowerCase(),
+                rateList: []
+              };
               this.db.category.insert(x, (err, docs) => {
                 if (err !== null) {
                   alert("Error While Adding to Database");
                   console.log(err);
                 } else {
-                  alert("SuccessFully Added to Database");
+                  alert(`SuccessFully ${d.category} Added to Database`);
                   this.rows = [];
                   this.addRow();
                 }
